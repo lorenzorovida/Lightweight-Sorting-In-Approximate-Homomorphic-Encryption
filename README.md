@@ -1,15 +1,16 @@
 <center> 
-  <h1 align="center">Practical Sorting of Encrypted Numbers in Approximate Homomorphic Encryption</h1>
+  <h1 align="center">Lightweight Sorting in Approximate Homomorphic Encryption</h1>
  
   <p align="center">
     <a href="https://orcid.org/0000-0001-5093-7932"><strong>Lorenzo Rovida</strong></a>
     ·
     <a href="https://orcid.org/0000-0002-8105-4371"><strong>Alberto Leporati</strong></a>
+    ·
+    <a href="https://orcid.org/0000-0002-8105-4371"><strong>Simone Basile</strong></a>
   </p>
   <span line-height:10>
   <p align="center" line-height:20><sup>University of Milan-Bicocca, <br>
-    Department of Informatics, Systems, and Communication, <br>
-  $\texttt{\{lorenzo.rovida, alberto.leporati\}@unimib.it}$
+    Department of Informatics, Systems, and Communication <br>
   </sup></p></span>
 </center>
 </br>
