@@ -62,7 +62,7 @@ One of the following three arguments are required in order to correctly give the
 
 - To use as input a file, use `--file FILENAME` where `FILENAME` is the selected file. Notice that the file must contain a power-of-two number of values. For example:
 ```
- --file "../inputs/four_values.txt"
+ --file "../inputs/sample.txt"
 ```
 
 - Alternatively, you can provide a vector directly by enclosing it in square brackets, for example: `"[0.5, 0.12, 0.71, 0.42]"`. Notice that, also in this case, the length of the vector $|v|$ must be a power of two. 
