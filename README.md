@@ -1,19 +1,6 @@
 <center> 
   <h1 align="center">Lightweight Sorting in Approximate Homomorphic Encryption</h1>
- 
-  <p align="center">
-    <a href="https://orcid.org/0000-0001-5093-7932"><strong>Lorenzo Rovida</strong></a>
-    ·
-    <a href="https://orcid.org/0000-0002-8105-4371"><strong>Alberto Leporati</strong></a>
-    ·
-    <a href="https://orcid.org/0000-0002-8105-4371"><strong>Simone Basile</strong></a>
-  </p>
-  <span line-height:10>
-  <p align="center" line-height:20><sup>University of Milan-Bicocca, <br>
-    Department of Informatics, Systems, and Communication <br>
-  </sup></p></span>
 </center>
-</br>
 <p align="center"><img src="imgs/console_noback.png" alt="Console presentation image" width=100% ></p>
 <!-- <img src="https://img.shields.io/badge/Paper%20-PDF-red.svg" alt="Paper PDF" width=10%> -->
 
