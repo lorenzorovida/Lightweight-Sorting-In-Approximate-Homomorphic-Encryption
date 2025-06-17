@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
         circuit_depth = controller.generate_context_network(n, levels_consumption, toy);
         controller.generate_rotation_keys_network(n);
 
-        for (int i = 0; i < input_values.size(); i++) {
+        for (std::size_t i = 0; i < input_values.size(); i++) {
             input_values[i] *= input_scale;
         }
 
@@ -267,7 +267,7 @@ void read_arguments(int argc, char *argv[]) {
 
         double min_diff = 1.0;
 
-        for (int i = 1; i < input_values_clone.size(); i++) {
+        for (std::size_t i = 1; i < input_values_clone.size(); i++) {
             double diff = input_values_clone[i] - input_values_clone[i - 1];
             if (diff < min_diff) {
                 min_diff = diff;

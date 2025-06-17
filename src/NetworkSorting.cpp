@@ -22,7 +22,7 @@ Ctxt NetworkSorting::sort(const Ctxt& in) {
 
             auto start_time_local = steady_clock::now();
 
-            clone_in = swap(clone_in, arrowsdelta, stage, round, relu_degree);
+            clone_in = swap(clone_in, arrowsdelta, stage, round);
 
             if (verbose) print_duration(start_time_local, "Swap");
             start_time_local = steady_clock::now();

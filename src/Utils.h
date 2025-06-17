@@ -116,7 +116,7 @@ static inline vector<double> parse_input_vector(const std::string& input) {
 
 static inline double infinity_norm(const std::vector<double>& vec1, const std::vector<double>& vec2) {
     double max_diff = 0.0;
-    for (int i = 0; i < vec1.size(); i++) {
+    for (std::size_t i = 0; i < vec1.size(); i++) {
         double diff = abs(vec1[i] - vec2[i]);
         if (diff > max_diff) {
             max_diff = diff;
@@ -184,7 +184,7 @@ static inline std::vector<double> generate_close_randoms(int n, double max_dista
     std::mt19937 gen(rd()); // seed the generator
 
 
-    while (values.size() < n) {
+    while (values.size() < static_cast<std::size_t>(n)) {
         std::uniform_int_distribution<> distr(0, values.size()); // define the range
         int random = distr(gen);
         values.push_back(values[random]);
