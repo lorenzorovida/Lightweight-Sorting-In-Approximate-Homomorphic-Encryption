@@ -159,8 +159,8 @@ Ctxt FHEController::encrypt(const vector<double> &vec, int level, int num_slots)
 Ctxt FHEController::encrypt_expanded(const vector<double> &vec, int level, int num_slots, int repetitions) {
     vector<double> repeated;
 
-    for (int i = 0; i < vec.size(); i++) {
-        for (std::size_t j = 0; j < repetitions; j++) {
+    for (std::size_t i = 0; i < vec.size(); i++) {
+        for (int j = 0; j < repetitions; j++) {
             repeated.push_back(vec[i]);
         }
     }
