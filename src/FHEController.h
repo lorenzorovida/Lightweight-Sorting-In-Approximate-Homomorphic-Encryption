@@ -135,6 +135,8 @@ public:
 
 private:
     KeyPair<DCRTPoly> key_pair; // Key pair for the FHE system
+
+    void print_moduli_chain(const DCRTPoly& poly);
 };
 
 #endif //SORTING_FHECONTROLLER_H
