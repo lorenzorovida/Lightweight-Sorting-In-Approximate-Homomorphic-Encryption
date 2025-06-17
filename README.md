@@ -6,7 +6,7 @@
 
 ---
 
-<a href="https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption/actions/runs/15704304641/job/44246395129"><img src="https://github.com/narger-ef/Practical-Sorting-of-Encrypted-Numbers/actions/workflows/cmake-multi-platform.yml/badge.svg" alt="CMake build result" width=30% ></a>
+[![CMake on multiple platforms](https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption/actions/workflows/cmake-single-platform.yml/badge.svg)](https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption/actions/workflows/cmake-single-platform.yml)
 
 This repository contains the source code for the work-in-progress paper *Practical Sorting of Encrypted Numbers in Approximate Homomorphic Encryption*. With this code it is possibly to sort a vector of encrypted values in "reasonable" time (e.g., few minutes for more than one thousand elements).
 
