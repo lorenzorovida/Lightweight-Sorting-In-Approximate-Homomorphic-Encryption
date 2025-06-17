@@ -43,12 +43,12 @@ Ctxt NetworkSorting::sort(const Ctxt& in) {
 }
 
 
-Ctxt NetworkSorting::swap(const Ctxt &in, int arrowsdelta, int round, int stage, int relu_degree) {
+Ctxt NetworkSorting::swap(const Ctxt &in, int arrowsdelta, int round, int stage) {
     Ctxt rot_pos = controller.rot(in, arrowsdelta);
     Ctxt rot_neg = controller.rot(in, -arrowsdelta);
 
     // This performs the evaluation of the min function
-    Ctxt m1 = controller.relu(in, rot_pos, relu_degree);
+    Ctxt m1 = controller.relu(controller.sub(in, rot_pos), relu_degree, n);
 
     // The other values are obtained in function of m1
     Ctxt m3 = controller.sub(controller.add(in, rot_pos), m1);

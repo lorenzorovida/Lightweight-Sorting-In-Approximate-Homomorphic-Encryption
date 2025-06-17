@@ -48,7 +48,7 @@ private:
      * @param poly_degree The degree of the ReLU Chebyshev polynomial
      * @return The vector obtained by applying the swapping opeartions
      */
-    Ctxt swap(const Ctxt &in, int arrowsdelta, int round, int stage, int relu_degree);
+    Ctxt swap(const Ctxt &in, int arrowsdelta, int round, int stage);
 
     /**
      * Generates a set of four masks to be applied to the four comparison vectors
