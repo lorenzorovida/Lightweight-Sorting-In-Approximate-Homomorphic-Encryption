@@ -1,7 +1,7 @@
 <center> 
   <h1 align="center">Lightweight Sorting in Approximate Homomorphic Encryption</h1>
 </center>
-<p align="center"><img src="imgs/console.png" alt="Console presentation image" width=80% ></p>
+<p align="center"><img src="imgs/console.png" alt="Console presentation image" width=87% ></p>
 <!-- <img src="https://img.shields.io/badge/Paper%20-PDF-red.svg" alt="Paper PDF" width=10%> -->
 
 ---
