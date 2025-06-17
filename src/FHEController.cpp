@@ -262,14 +262,14 @@ Ctxt FHEController::sinc(const Ctxt &in, int poly_degree, int n) {
     return context->EvalChebyshevFunction([n](double x) -> double { return sin(3.14159265358979323846 * x * n) / (3.14159265358979323846 * x * n); },
                                           in,
                                           -1,
-                                          1, poly_degree); //-1 because of an OpenFHE bug!!
+                                          1, poly_degree);
 }
 
 Ctxt FHEController::relu(const Ctxt &in, int poly_degree, int n) {
     return context->EvalChebyshevFunction([](double x) -> double { if (x > 0) return x; return 0; },
                                           in,
                                           -1,
-                                          1, poly_degree); //-1 because of an OpenFHE bug!!
+                                          1, poly_degree);
 }
 
 void FHEController::print(const Ctxt &c, int slots, string prefix) {
