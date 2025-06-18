@@ -1,13 +1,10 @@
-<center> 
-  <h1 align="center">Lightweight Sorting in Approximate Homomorphic Encryption</h1>
-</center>
-<p align="center"><img src="imgs/console.png" alt="Console presentation image" width=87% ></p>
-<!-- <img src="https://img.shields.io/badge/Paper%20-PDF-red.svg" alt="Paper PDF" width=10%> -->
+# Lightweight Sorting in Approximate Homomorphic Encryption
 
----
 
 [![CMake on multiple platforms](https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption/actions/workflows/cmake-single-platform.yml/badge.svg)](https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption/actions/workflows/cmake-single-platform.yml)
+<img src="imgs/console.png" alt="Console presentation image" width=87% >
 
+---
 This repository contains the source code for the paper *Lightweight Sorting in Approximate Homomorphic Encryption*. With this code it is possible to sort a vector of encrypted values in "reasonable" time (e.g., few seconds for 128 elements in $[0, 1]$, with precision up to $10^{-2}$).
 
 The proposal (and the code) is split in two parts:
@@ -55,17 +52,17 @@ In order to work properly, we must define some required arguments:
 #### Input values:
 One of the following three arguments are required in order to correctly give the input to the circuit.
 
-- To use as input a vector of values from 0 to `n` randomly shuffled, use `--random n` where `n` is a power of two. Also, set the delta value `--delta d` where `d` represents the $\delta$ term used in the paper. For example:
+- **Random**: To use as input a vector of values from 0 to `n` randomly shuffled, use `--random n` where `n` is a power of two. Also, set the delta value `--delta d` where `d` represents the $\delta$ term used in the paper. For example:
 ```
 --random 8 --delta 0.01
 ```
 
-- To use as input a file, use `--file FILENAME` where `FILENAME` is the selected file. Notice that the file must contain a power-of-two number of values. For example:
+- **Input file**: To use as input a file, use `--file FILENAME` where `FILENAME` is the selected file. Notice that the file must contain a power-of-two number of values. For example:
 ```
  --file "../inputs/sample.txt"
 ```
 
-- Alternatively, you can provide a vector directly by enclosing it in square brackets, for example: `"[0.5, 0.12, 0.71, 0.42]"`. Notice that, also in this case, the length of the vector $|v|$ must be a power of two. 
+- **Input inline**: Alternatively, you can provide a vector directly by enclosing it in square brackets, for example: `"[0.5, 0.12, 0.71, 0.42]"`. Notice that, also in this case, the length of the vector $|v|$ must be a power of two. 
 ```
 "[0.5, 0.12, 0.71, 0.42]"
 ```
@@ -73,11 +70,11 @@ One of the following three arguments are required in order to correctly give the
 #### Sorting method
 Moreover, you have to pick the sorting algorithm, that can be either the permutation-based (light and fast, requires $\Theta(n^2$ slots) or the network-based (heavier and requires bootstrapping, but uses $\Theta(n)$ slots).
 
-For the permutation-based, use
+- **Permutation-based**: simply use:
 ```
 --permutation
 ```
-for the network-based, use
+- **Network-based**: simply use:
 ```
 --network
 ```
