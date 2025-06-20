@@ -112,6 +112,11 @@ It is possible to change the behavior of the program by using some optional argu
 
 As this work is still partially WIP, Feel free to open issues or to send us messages with suggestions/comments/critics! 
 
+## Presentation
+
+You can find a presentation of this work clicking here:
+
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/ea066flbddU/0.jpg)](https://www.youtube.com/watch?v=ea066flbddU)
 
 ## Authors
 
