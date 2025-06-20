@@ -5,7 +5,7 @@
 <img src="imgs/console.png" alt="Console presentation image" width=87% >
 
 ---
-This repository contains the source code for the (still preprint) paper *Lightweight Sorting in Approximate Homomorphic Encryption*. With this code it is possible to sort a vector of encrypted values in "reasonable" time (e.g., few seconds for 128 elements in $[0, 1]$, with precision up to $10^{-2}$).
+This repository contains the source code for the preprint paper *[Lightweight Sorting in Approximate Homomorphic Encryption](https://ia.cr/2025/1150)*. With this code it is possible to sort a vector of encrypted values in "reasonable" time (e.g., few seconds for 128 elements in $[0, 1]$, with precision up to $10^{-2}$).
 
 The proposal (and the code) is split in two parts:
 - We propose a concrete improvement in terms of runtime and memory from [MEHP25], although we use precisely the same framework.
