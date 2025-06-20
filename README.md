@@ -132,3 +132,8 @@ Made with <3  at [Bicocca Security Lab](https://www.bislab.unimib.it), at Univer
 ### Declaration
 
 This is a proof of concept and, even though parameters are created with $\lambda \geq 128$ security bits (according to [Homomorphic Encryption Standards](https://homomorphicencryption.org/standard)), this circuit is intended for educational purposes only.
+
+
+## References
+
+[MEHP25] Federico Mazzone, Maarten Everts, Florian Hahn and Andreas Peter, *Efficient Ranking, Order Statistics, and Sorting under CKKS* in: USENIX Security '25
