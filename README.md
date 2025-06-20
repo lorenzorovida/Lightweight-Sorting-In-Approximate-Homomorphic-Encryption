@@ -3,7 +3,7 @@
 
 [![CMake on multiple platforms](https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption/actions/workflows/cmake-single-platform.yml/badge.svg)](https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption/actions/workflows/cmake-single-platform.yml)
 <br>
-<img src="imgs/preprint_icon.png" alt="Console presentation image" width=130px >
+<a href="https://eprint.iacr.org/2025/1150"><img src="imgs/preprint_icon.png" alt="Console presentation image" width=130px ></a>
 <img src="imgs/console.png" alt="Console presentation image" width=87% >
 
 ---
