@@ -2,6 +2,8 @@
 
 
 [![CMake on multiple platforms](https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption/actions/workflows/cmake-single-platform.yml/badge.svg)](https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption/actions/workflows/cmake-single-platform.yml)
+<br>
+<img src="imgs/preprint_button.png" alt="Console presentation image" width=130px >
 <img src="imgs/console.png" alt="Console presentation image" width=87% >
 
 ---
