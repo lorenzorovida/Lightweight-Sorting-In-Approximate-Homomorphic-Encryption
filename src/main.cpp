@@ -176,7 +176,7 @@ void set_permutation_parameters(int n, double d) {
         cerr << "The required min distance '" << d << "' is too small!" << endl;
     }
 
-    if (n == 8) {
+    if (n <= 8) {
         degree_sinc = 59;
         partial_depth += 6;
     } else if (n == 16) {
@@ -196,6 +196,7 @@ void set_permutation_parameters(int n, double d) {
     input_scale = 1.0;
 
     circuit_depth = partial_depth + 1; //For the last matrix mult
+
     cout << "Circuit depth: " << circuit_depth << endl;
 
 }
@@ -232,21 +233,18 @@ void read_arguments(int argc, char *argv[]) {
 
     }
 
+    bool random_elements;
+
     if (argc > 2 && string(argv[1]) == "--random") {
         int num_values = stoi(string(argv[2]));
 
-        if (argc > 3)
-            delta = stod(string(argv[3]));
-        else
-            delta = 1.0 / num_values;
+        random_elements = true;
 
         if (floor(log2(num_values)) != ceil(log2(num_values))) {
             cerr << "The number of values must be a power of two" << endl;
         }
 
         n = num_values;
-
-        input_values = generate_close_randoms(num_values, delta);
 
     } else if (argc > 2 && string(argv[1]) == "--file") {
         ifstream f(argv[2]); //taking file as inputstream
@@ -314,6 +312,10 @@ void read_arguments(int argc, char *argv[]) {
             relu_degree = stoi(argv[i+1]);
         }
 
+    }
+
+    if (random_elements) {
+        input_values = generate_close_randoms(n, delta);
     }
 }
 
