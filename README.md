@@ -94,19 +94,19 @@ It is possible to change the behavior of the program by using some optional argu
 
 - `--tieoffset`: use this argument in the permutation-based approach if the inputs contain repeated elements.
 ```
-./Sort --random 32 --delta 0.1 --permutation --tieoffset --toy_parameters
+./Sort --random 32 --delta 0.1 --permutation --tieoffset --toy
 ```
 > [!IMPORTANT]
 > If the input contains repeated elements and this flag is not on, sorting will not work properly.
 
 - `--toy`: with this argument the cryptosystem will not have the minimum requirement of $\lambda \geq 128$ security bits against classical computers. Suggested in case you want to play around with the algorithm. For example:
 ```
-./Sort --random 32 --delta 0.01 --permutation --toy_parameters
+./Sort --random 32 --delta 0.01 --permutation --toy
 ```
 
 - `--verbose`: prints some (hopefully) useful stuff. For example:
 ```
-./Sort --random 32 --delta 0.01 --toy_parameters --network --verbose
+./Sort --random 32 --delta 0.01 --toy --network --verbose
 ```
 
 ## Suggestions
