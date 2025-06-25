@@ -43,7 +43,7 @@ make
 ```
 A sample usage to test if everything is setup might be:
 ```
-./Sort --random 16 0.01 --toy --permutation
+./Sort --random 16 --delta 0.01 --toy --permutation
 ```
 That sort 16 random elements using permutation-based approach, with toy parameters.
 
