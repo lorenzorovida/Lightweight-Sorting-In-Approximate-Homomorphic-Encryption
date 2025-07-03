@@ -1,13 +1,7 @@
 # Lightweight Sorting in Approximate Homomorphic Encryption
 
-
-[![CMake on multiple platforms](https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption/actions/workflows/cmake-single-platform.yml/badge.svg)](https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption/actions/workflows/cmake-single-platform.yml)
-<br>
-<a href="https://eprint.iacr.org/2025/1150"><img src="imgs/preprint_icon.png" alt="Console presentation image" width=130px ></a>
-<img src="imgs/console.png" alt="Console presentation image" width=87% >
-
 ---
-This repository contains the source code for the preprint paper *[Lightweight Sorting in Approximate Homomorphic Encryption](https://ia.cr/2025/1150)*. With this code it is possible to sort a vector of encrypted values in "reasonable" time (e.g., few seconds for 128 elements in $[0, 1]$, with precision up to $10^{-2}$).
+This repository contains the source code for XXXX. With this code it is possible to sort a vector of encrypted values in "reasonable" time (e.g., few seconds for 128 elements in $[0, 1]$, with precision up to $10^{-2}$).
 
 The proposal (and the code) is split in two parts:
 - We propose a concrete improvement in terms of runtime and memory from [MEHP25], although we use precisely the same framework.
@@ -27,7 +21,7 @@ It is pretty straightforward to use this source code, first of all **be sure** t
 First of all clone the repository:
 
 ```
-git clone https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption
+git clone XXX
 ```
 
 Then, make a `build` folder and build the project with `cmake`
@@ -115,19 +109,11 @@ As this work is still partially WIP, Feel free to open issues or to send us mess
 
 ## Presentation
 
-You can find a presentation of this work clicking here:
-
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/ea066flbddU/0.jpg)](https://www.youtube.com/watch?v=ea066flbddU)
+XXXX
 
 ## Authors
 
-- Lorenzo Rovida (`lorenzo.rovida@unimib.it`)
-- Alberto Leporati (`alberto.leporati@unimib.it`)
-- Simone Basile (`s.basile@campus.unimib.it`)
-
-Made with <3  at [Bicocca Security Lab](https://www.bislab.unimib.it), at University of Milan-Bicocca.
-
-<img src="imgs/lab_logo.png" alt="BisLab logo" width=20%>
+XXXX
 
 
 ### Declaration
