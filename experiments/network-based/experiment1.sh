@@ -43,18 +43,30 @@ echo "$output" | tee -a results/experiment1.txt
 
 output=$(../../build-release/Sort --random 512 0.01 --network)
 
-output="$output, inputs: 128"
+output="$output, inputs: 512"
 
 echo "$output" | tee -a results/experiment1.txt
 
 output=$(../../build-release/Sort --random 1024 0.01 --network)
 
-output="$output, inputs: 128"
+output="$output, inputs: 1024"
 
 echo "$output" | tee -a results/experiment1.txt
 
 output=$(../../build-release/Sort --random 2048 0.01 --network)
 
-output="$output, inputs: 128"
+output="$output, inputs: 2048"
+
+echo "$output" | tee -a results/experiment1.txt
+
+output=$(../../build-release/Sort --random 4096 0.01 --network)
+
+output="$output, inputs: 4096"
+
+echo "$output" | tee -a results/experiment1.txt
+
+output=$(../../build-release/Sort --random 8192 0.01 --network)
+
+output="$output, inputs: 8192"
 
 echo "$output" | tee -a results/experiment1.txt
