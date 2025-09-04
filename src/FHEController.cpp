@@ -205,7 +205,8 @@ Ctxt FHEController::add(const Ctxt &a, const Ptxt &b) {
 }
 
 Ctxt FHEController::add(const Ctxt &a, double d) {
-    return context->EvalAdd(a, Ptxt(encode(d, a->GetLevel(), a->GetSlots())));
+    Ptxt temp(encode(d, a->GetLevel(), a->GetSlots()));
+    return context->EvalAdd(a, temp);
 }
 
 Ctxt FHEController::add_tree(vector<Ctxt> v) {
