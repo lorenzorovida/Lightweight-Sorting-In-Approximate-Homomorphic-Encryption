@@ -199,7 +199,7 @@ Ctxt FHEController::add(const Ctxt &a, const Ctxt &b) {
     return context->EvalAdd(a, b);
 }
 
-Ctxt FHEController::add(const Ctxt &a, const Ptxt &b) {
+Ctxt FHEController::add(const Ctxt &a, const Ptxt b) {
     return context->EvalAdd(a, b);
 }
 
