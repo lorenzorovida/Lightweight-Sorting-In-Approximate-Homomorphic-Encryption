@@ -200,7 +200,8 @@ Ctxt FHEController::add(const Ctxt &a, const Ctxt &b) {
 }
 
 Ctxt FHEController::add(const Ctxt &a, const Ptxt &b) {
-    return context->EvalAdd(a, Ptxt(b));
+    Ptxt temp(b);
+    return context->EvalAdd(a, temp);
 }
 
 Ctxt FHEController::add(const Ctxt &a, double d) {
