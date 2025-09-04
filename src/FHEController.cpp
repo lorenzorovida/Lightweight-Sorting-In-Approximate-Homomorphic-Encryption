@@ -218,7 +218,7 @@ Ctxt FHEController::sub(const Ctxt &a, const Ctxt &b) {
 }
 
 Ctxt FHEController::sub(const Ctxt &c, const Ptxt &p) {
-    Ptxt temp(b);
+    Ptxt temp(p);
     return context->EvalSub(c, temp);
 }
 
