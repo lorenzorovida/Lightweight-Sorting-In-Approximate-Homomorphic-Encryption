@@ -218,7 +218,8 @@ Ctxt FHEController::sub(const Ctxt &a, const Ctxt &b) {
 }
 
 Ctxt FHEController::sub(const Ctxt &c, const Ptxt &p) {
-    return context->EvalSub(c, p);
+    Ptxt temp(b);
+    return context->EvalSub(c, temp);
 }
 
 Ctxt FHEController::mult(const Ctxt &c, const Ptxt& p) {
