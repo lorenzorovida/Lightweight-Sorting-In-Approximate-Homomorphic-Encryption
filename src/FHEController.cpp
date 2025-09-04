@@ -200,11 +200,11 @@ Ctxt FHEController::add(const Ctxt &a, const Ctxt &b) {
 }
 
 Ctxt FHEController::add(const Ctxt &a, const Ptxt &b) {
-    return context->EvalAdd(a, b);
+    return context->EvalAdd(a, Ptxt(b));
 }
 
 Ctxt FHEController::add(const Ctxt &a, double d) {
-    return context->EvalAdd(a, encode(d, a->GetLevel(), a->GetSlots()));
+    return context->EvalAdd(a, Ptxt(encode(d, a->GetLevel(), a->GetSlots())));
 }
 
 Ctxt FHEController::add_tree(vector<Ctxt> v) {
