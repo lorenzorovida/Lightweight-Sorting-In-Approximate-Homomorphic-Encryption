@@ -94,6 +94,27 @@ Ctxt PermutationSorting::compute_sorting(const Ctxt &indexes, const Ctxt &in_rep
 
     Ctxt permutation_matrix = controller.sinc(permutation_delta, degree_sinc, n);
 
+    if (clean_permutation_matrix) {
+        cout << "Prima: ";
+        controller.print(permutation_matrix, 32);
+
+        permutation_matrix = controller.clean_binary(permutation_matrix);
+
+        cout << "Dopo: ";
+        controller.print(permutation_matrix, 32);
+
+        permutation_matrix = controller.clean_binary(permutation_matrix);
+
+        cout << "Dopo: ";
+        controller.print(permutation_matrix, 32);
+
+        permutation_matrix = controller.clean_binary(permutation_matrix);
+
+        cout << "Dopo: ";
+        controller.print(permutation_matrix, 32);
+
+    }
+
     Ctxt sorted = controller.mult(in_rep, permutation_matrix);
 
     for (int i = 0; i < log2(n); i++) {

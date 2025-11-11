@@ -43,6 +43,12 @@ int relu_degree;
 double input_scale;
 
 
+/*
+ * Experimental
+ */
+bool clean_permutation_matrix;
+
+
 SortingType sortingType = NONE;
 
 int main(int argc, char *argv[]) {
@@ -71,7 +77,7 @@ int main(int argc, char *argv[]) {
 
         cout << endl << "Ciphertext: " << endl << input_values << endl << endl << "δ: " << delta << ", ";
 
-        controller.generate_context_permutation(n * n, circuit_depth, toy);
+        controller.generate_context_permutation(n * n, circuit_depth + 13, toy);
 
         for (int i = 0; i < log2(n); i++) {
             controller.generate_rotation_key(pow(2, i) * n);
@@ -82,7 +88,7 @@ int main(int argc, char *argv[]) {
         Ctxt in_rep = controller.encrypt_repeated(input_values, 0, n*n, n);
 
         PermutationSorting sorting =
-                PermutationSorting(controller, sigmoid_scaling, degree_sigmoid, degree_sinc, tieoffset, n, delta, toy, verbose);
+                PermutationSorting(controller, sigmoid_scaling, degree_sigmoid, degree_sinc, tieoffset, n, delta, toy, verbose, clean_permutation_matrix);
 
         result = sorting.sort(in_exp, in_rep);
 
@@ -348,6 +354,9 @@ void read_arguments(int argc, char *argv[]) {
         }
         if (string(argv[i]) == "--relu") {
             relu_degree = stoi(argv[i+1]);
+        }
+        if (string(argv[i]) == "--clean_permutation_matrix") {
+            clean_permutation_matrix = true;
         }
 
     }

@@ -117,6 +117,9 @@ public:
     // Approximation of sinc function
     Ctxt sinc(const Ctxt& in, int degree, int n);
 
+    // Cleaning à-la discrete CKKS
+    Ctxt clean_binary(const Ctxt& in);
+
 
     /**
       * Network-based operations

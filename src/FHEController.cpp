@@ -97,6 +97,7 @@ void FHEController::generate_context_permutation(int num_slots, int levels_requi
     //This keeps memory small, at the cost of increasing the modulus
     parameters.SetNumLargeDigits(2);
 
+
     parameters.SetMultiplicativeDepth(levels_required);
 
 
@@ -273,6 +274,17 @@ Ctxt FHEController::relu(const Ctxt &in, int poly_degree, int n) {
                                           in,
                                           -1,
                                           1, poly_degree);
+}
+
+Ctxt FHEController::clean_binary(const Ctxt &in) {
+    //3x^2 - 2x^3
+    Ctxt square = context->EvalSquare(in);
+    Ctxt third = context->EvalMult(square, in);
+
+    Ctxt term1 = context->EvalMult(square, 3);
+    Ctxt term2 = context->EvalMult(third, 2);
+
+    return context->EvalSub(term1, term2);
 }
 
 void FHEController::print(const Ctxt &c, int slots, string prefix) {
