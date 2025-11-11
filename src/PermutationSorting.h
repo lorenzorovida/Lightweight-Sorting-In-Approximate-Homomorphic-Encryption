@@ -7,6 +7,10 @@
 #define PRACTICAL_SORTING_OF_ENCRYPTED_NUMBERS_PERMUTATIONSORTING_H
 
 #include "../src/FHEController.h"
+// For multithreading
+#include <cmath>
+#include <omp.h>
+
 
 using namespace lbcrypto;
 using namespace std;

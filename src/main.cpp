@@ -6,6 +6,9 @@
 #include "PermutationSorting.h"
 #include "NetworkSorting.h"
 
+
+
+
 using namespace lbcrypto;
 using namespace std;
 using namespace std::chrono;
@@ -45,8 +48,12 @@ SortingType sortingType = NONE;
 int main(int argc, char *argv[]) {
     read_arguments(argc, argv);
 
+    if (argc == 1 || (argc == 2 && string(argv[1]) == "--help"))
+        return 0;
+
     if (sortingType == NONE) {
         cerr << "You must pick a sorting method. Add either --permutation or --network" << endl;
+        return 1;
     } else {
         cout << "Selected sorting type: " << to_string(sortingType) << endl;
     }
@@ -223,17 +230,39 @@ void set_network_parameters(double d) {
 }
 
 void read_arguments(int argc, char *argv[]) {
-
     if (argc == 1) {
-        cout << "TODO: mettere istruzioni!" << endl;
-        n = 64;
-        delta = .001;
-        cout << "Going with n = " << n << " and max_dist = " << delta << endl;
-        input_values = generate_close_randoms(n, delta);
-
+        cerr << "Usage: ./Sort [input] [sorting mode] [options]\n"
+                "\n"
+                "Required Input (choose ONE):\n"
+                "  --random <num_values>     Generate <num_values> random values (must be a power of two)\n"
+                "  --file <filename>         Read numeric values from the specified file\n"
+                "  --inline \"[a,b,c,...]\"  Provide an inline vector of numeric values\n"
+                "\n"
+                "Required Sorting Mode (choose ONE):\n"
+                "  --network                 Use network-based sorting\n"
+                "  --permutation             Use permutation-based sorting\n"
+                "\n"
+                "Optional Flags:\n"
+                "  --toy                     Enable toy mode\n"
+                "  --verbose                 Enable detailed output\n"
+                "  --tieoffset               Apply tie-offset adjustment\n"
+                "  --delta <value>           Manually set the delta (value spacing)\n"
+                "  --relu <degree>           Set ReLU degree (integer parameter)\n"
+                "\n"
+                "Examples:\n"
+                "  ./program --random 8 --network\n"
+                "  ./program --file input.txt --permutation\n"
+                "  ./program \"[1.2, 3.4, 2.1, 4.0]\" --network\n"
+                "  ./program --random 16 --permutation --verbose --delta 0.05\n"
+                "\n"
+                "Notes:\n"
+                "  - Exactly one input method and one sorting mode must be specified.\n"
+                "  - For --random, the number of values must be a power of two.\n"
+                "  - If reading from file, the file must contain space-, comma-, or newline-separated numbers." << endl;
+        return;
     }
 
-    bool random_elements;
+    bool random_elements = false;
 
     if (argc > 2 && string(argv[1]) == "--random") {
         int num_values = stoi(string(argv[2]));
@@ -275,12 +304,21 @@ void read_arguments(int argc, char *argv[]) {
         delta = min_diff;
 
     }
-    else if (argc > 1 && string(argv[1]).front() == '[' && string(argv[1]).back() == ']') {
+    else if (argc > 2 && string(argv[1]) == "--inline" && string(argv[2]).front() == '[' && string(argv[2]).back() == ']') {
         try {
-            input_values = parse_input_vector(argv[1]);
+            input_values = parse_input_vector(argv[2]);
             n = input_values.size();
-            auto [minIt, maxIt] = std::minmax_element(input_values.begin(), input_values.end());
-            delta = std::abs(*maxIt - *minIt);
+
+            double min_diff = 1.0;
+
+            for (std::size_t i = 1; i < input_values.size(); i++) {
+                double diff = input_values[i] - input_values[i - 1];
+                if (abs(diff) < min_diff) {
+                    min_diff = abs(diff);
+                }
+            }
+
+            delta = min_diff;
 
             cout << "n: " << n << endl << "δ: " << delta << endl << endl;
 
