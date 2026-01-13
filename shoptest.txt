@@ -1,0 +1,32 @@
+mkdir -p ~/.local/Homebrew &&
+curl -L https://github.com/Homebrew/brew/tarball/master |
+tar xz --strip 1 -C ~/.local/Homebrew
+mkdir -p ~/.local/bin &&
+ln -s ~/.local/Homebrew/bin/brew ~/.local/bin
+#cat << 'EOF' >> ~/.bashrc # or ~/.zshrc
+#[ -d "$HOME/.local/bin" ] &&
+#export PATH="$PATH:$HOME/.local/bin" # or "$HOME/.local/bin:$PATH"
+#EOF
+brew install cmake
+brew install libomp
+git clone https://github.com/openfheorg/openfhe-development
+cd openfhe-development
+mkdir build
+cd build
+cmake -DCMAKE_CROSSCOMPILING=1 -DRUN_HAVE_STD_REGEX=0 -DRUN_HAVE_POSIX_REGEX=0 -DCMAKE_INSTALL_PREFIX=$HOME/ofdir ..
+cmake -DCMAKE_INSTALL_PREFIX=$HOME/ofdir ..
+make install
+cd ..
+cd ..
+git clone --branch discrete-cleaning --single-branch https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption
+cd Lightweight-Sorting-In-Approximate-Homomorphic-Encryption
+mkdir build
+cd build
+cmake ..
+make -j 8
+cd ..
+cd experiments
+cd permutation-based
+./experiment-inputs.sh
+./experiment1.sh
+./experiment2.sh
