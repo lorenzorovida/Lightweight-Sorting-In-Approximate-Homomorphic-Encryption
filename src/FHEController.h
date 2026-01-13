@@ -115,11 +115,15 @@ public:
     Ctxt rotsum(const Ctxt& in, int n);
 
     // Approximation of sinc function
-    Ctxt sinc(const Ctxt& in, int degree, int n);
+    Ctxt sinc(const Ctxt& in, int degree, double n);
+
+    // Approximation of sinc function
+    Ctxt double_sinc(const Ctxt& in, int degree, double n);
 
     // Cleaning à-la discrete CKKS
-    Ctxt clean_binary(const Ctxt& in);
-
+    Ctxt clean_binary(const Ctxt& in, double scale);
+    Ctxt clean_sign(const Ctxt& in);
+    Ctxt clean_sigmoid(const Ctxt& in, double n);
 
     /**
       * Network-based operations

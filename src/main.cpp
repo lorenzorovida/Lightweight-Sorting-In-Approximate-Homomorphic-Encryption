@@ -6,6 +6,10 @@
 #include "PermutationSorting.h"
 #include "NetworkSorting.h"
 
+#include "schemelet/rlwe-mp.h"
+#include "math/hermite.h"
+#include <functional>
+
 
 
 
@@ -17,6 +21,7 @@ void read_arguments(int argc, char *argv[]);
 void set_permutation_parameters(int n, double d);
 void set_network_parameters(double d);
 void evaluate_sorting_accuracy(const Ctxt& result);
+
 
 FHEController controller;
 vector<double> input_values;
@@ -73,11 +78,13 @@ int main(int argc, char *argv[]) {
             set_permutation_parameters(n, delta);
         }
 
-        cout << setprecision(precision_digits) << fixed;
-
         cout << endl << "Ciphertext: " << endl << input_values << endl << endl << "δ: " << delta << ", ";
 
-        controller.generate_context_permutation(n * n, circuit_depth + 13, toy);
+        controller.generate_context_permutation(n * n, circuit_depth, toy);
+
+        Ctxt c = controller.encrypt(input_values, 0, input_values.size());
+
+        Ptxt p = controller.decrypt(c);
 
         for (int i = 0; i < log2(n); i++) {
             controller.generate_rotation_key(pow(2, i) * n);
@@ -123,6 +130,7 @@ int main(int argc, char *argv[]) {
     print_duration(start_time, "The sorting took:");
 
     evaluate_sorting_accuracy(result);
+
 }
 
 
@@ -168,26 +176,39 @@ void set_permutation_parameters(int n, double d) {
         partial_depth = 10;
     } else if (d >= 0.01) {
         precision_digits = 2;
-        sigmoid_scaling = 650;
-        degree_sigmoid = 1006;
+        sigmoid_scaling = 350;
+        degree_sigmoid = 495;
         partial_depth = 10;
+
+        partial_depth += 4; // Metto due clean
     } else if (d >= 0.001) {
         precision_digits = 3;
-        sigmoid_scaling = 9170;
-        degree_sigmoid = 16000;
-        partial_depth = 14;
-    } else if (d >= 0.0001) {
-        //Still todo
+        sigmoid_scaling = 3000;
+        degree_sigmoid = 2006;
+        partial_depth = 11;
+
+        partial_depth += 6; // Metto tre clean
+
+    //} else if (d >= 0.0001) {
+    //    //Still todo
+    //    precision_digits = 4;
+    //    sigmoid_scaling = 16000;
+    //    degree_sigmoid = 32000;
+    //    partial_depth = 15;
+
+    //    cout << endl << "k: " << sigmoid_scaling << ", d: " << degree_sigmoid << endl << endl;
+    //    degree_sinc = 495;
+    } else {
+        cout << "The required min distance '" << d << "' is too small! But let's go :)" << endl;
         precision_digits = 4;
-        sigmoid_scaling = 16000;
-        degree_sigmoid = 32000;
-        partial_depth = 15;
+        sigmoid_scaling = 650;
+        degree_sigmoid = 1006;
+        partial_depth = 14;
 
         cout << endl << "k: " << sigmoid_scaling << ", d: " << degree_sigmoid << endl << endl;
-        degree_sinc = 495;
-    } else {
-        cerr << "The required min distance '" << d << "' is too small!" << endl;
     }
+
+    cout << setprecision(precision_digits) << fixed;
 
     if (n <= 8) {
         degree_sinc = 59;
@@ -199,11 +220,15 @@ void set_permutation_parameters(int n, double d) {
         degree_sinc = 119;
         partial_depth += 7;
     } else if (n == 64) {
-        degree_sinc = 247;
-        partial_depth += 8;
+        //degree_sinc = 247;
+        //partial_depth += 8;
+        degree_sinc = 495;
+        partial_depth += 9;
     } else if (n == 128) {
         degree_sinc = 495;
         partial_depth += 9;
+
+        partial_depth += 4; //Two clean
     }
 
     input_scale = 1.0;
@@ -365,5 +390,4 @@ void read_arguments(int argc, char *argv[]) {
         input_values = generate_close_randoms(n, delta);
     }
 }
-
 
