@@ -7,8 +7,11 @@
 Ctxt PermutationSorting::sort(const Ctxt& in_exp, const Ctxt& in_rep) {
     Ctxt indexing;
 
+    Ctxt difference = controller.sub(in_exp, in_rep);
+    Ctxt cmp = controller.sigmoid(difference, 1, degree_sigmoid, -sigmoid_scaling);
+
     if (tieoffset) {
-        std::cout << std::endl << "Available threads: " << omp_get_max_threads() << ", required 2 for full speed"
+        if (verbose) std::cout << std::endl << "Available threads: " << omp_get_max_threads() << ", required 2 for full speed"
                                                                                  << std::endl << std::endl;
         Ctxt offset;
 
@@ -16,24 +19,24 @@ Ctxt PermutationSorting::sort(const Ctxt& in_exp, const Ctxt& in_rep) {
         {
 #pragma omp section
             {
-                indexing = compute_indexing(in_exp, in_rep);
+                indexing = compute_indexing(cmp);
             }
 
 #pragma omp section
             {
-                offset = compute_tieoffset(in_exp, in_rep);
+                offset = compute_tieoffset(cmp);
             }
         }
 
         indexing = controller.add(indexing, offset);
     } else {
-        indexing = compute_indexing(in_exp, in_rep);
+        indexing = compute_indexing(cmp);
     }
 
 
     if (verbose) controller.print(indexing, n*n, "Indexes: ");
 
-    //Indexes are correct, simply scaled by 1/n for approximations to run over [-1, 1]
+    // Indexes are correct, simply scaled by 1/n for approximations to run over [-1, 1]
 
     Ctxt ordered = compute_sorting(indexing, in_rep);
 
@@ -41,15 +44,23 @@ Ctxt PermutationSorting::sort(const Ctxt& in_exp, const Ctxt& in_rep) {
 
 }
 
-Ctxt PermutationSorting::compute_indexing(const Ctxt &in_exp, const Ctxt &in_rep){
-    Ctxt difference = controller.sub(in_exp, in_rep);
-
-    Ctxt cmp = controller.sigmoid(difference, n, degree_sigmoid, -sigmoid_scaling);
+Ctxt PermutationSorting::compute_indexing(const Ctxt &c){
+    //Devo dividere per n
+    Ctxt cmp = c->Clone();
 
     if (delta == 0.01) {
-        cmp = controller.clean_sigmoid(cmp, n);
+        cmp = controller.clean_sigmoid_and_scale(cmp, 1.0 / n);
         cmp = controller.clean_sigmoid(cmp, n);
     } else if (delta == 0.001) {
+        cmp = controller.clean_sigmoid_and_scale(cmp, 1.0 / n);
+        cmp = controller.clean_sigmoid(cmp, n);
+        cmp = controller.clean_sigmoid(cmp, n);
+    } else if (delta == 0.0001) {
+        cmp = controller.clean_sigmoid_and_scale(cmp, 1.0 / n);
+        cmp = controller.clean_sigmoid(cmp, n);
+        cmp = controller.clean_sigmoid(cmp, n);
+        cmp = controller.clean_sigmoid(cmp, n);
+        cmp = controller.clean_sigmoid(cmp, n);
         cmp = controller.clean_sigmoid(cmp, n);
         cmp = controller.clean_sigmoid(cmp, n);
         cmp = controller.clean_sigmoid(cmp, n);
@@ -60,29 +71,27 @@ Ctxt PermutationSorting::compute_indexing(const Ctxt &in_exp, const Ctxt &in_rep
     return controller.sub(indexes, controller.encode(0.5 / n, 0, n*n));
 }
 
-Ctxt PermutationSorting::compute_tieoffset(const Ctxt &in_exp, const Ctxt &in_rep){
-    int d_tie = 1007;
+Ctxt PermutationSorting::compute_tieoffset(const Ctxt &c){
+    Ctxt eq = c->Clone();
 
-    if (delta >= 0.1) {
-        d_tie = 247;
-    } else if (delta >= 0.01) {
-        d_tie = 495;
-    } else if (delta >= 0.001) {
-        d_tie = 2007;
+    if (delta == 0.01) {
+        eq = controller.clean_sigmoid(eq, 1);
+        //eq = controller.clean_sigmoid(eq, 1);
     }
-
-    cout << d_tie << endl;
-
-    controller.print(controller.sub(in_exp, in_rep), 16);
-    Ctxt eq = controller.sinc(controller.sub(in_exp, in_rep), d_tie, 1.0 / delta);
-    controller.print(eq, 16);
-
-    if (delta <= 0.01) {
+    if (delta == 0.001) {
         eq = controller.clean_sigmoid(eq, 1);
         eq = controller.clean_sigmoid(eq, 1);
-        controller.print(eq, 16);
+        //eq = controller.clean_sigmoid(eq, 1);
+    } else if (delta == 0.0001) {
+        eq = controller.clean_sigmoid(eq, 1);
+        eq = controller.clean_sigmoid(eq, 1);
+        eq = controller.clean_sigmoid(eq, 1);
+        eq = controller.clean_sigmoid(eq, 1);
+        //eq = controller.clean_sigmoid(eq, 1);
     }
 
+    eq = controller.mult(eq, controller.sub(1, eq));
+    eq = controller.clean_sigmoid_and_scale(eq, 6.4);
 
     Ctxt eqclone = controller.add(eq, controller.encode(0, eq->GetLevel(), n*n));
 
@@ -133,8 +142,11 @@ Ctxt PermutationSorting::compute_sorting(const Ctxt &indexes, const Ctxt &in_rep
 
     permutation_matrix = controller.sinc(permutation_delta, degree_sinc, n);
 
-    if (n == 128) {
+
+    if (n >= 32) {
         permutation_matrix = controller.clean_sigmoid(permutation_matrix, 1);
+    }
+    if (n >= 128) {
         permutation_matrix = controller.clean_sigmoid(permutation_matrix, 1);
     }
 

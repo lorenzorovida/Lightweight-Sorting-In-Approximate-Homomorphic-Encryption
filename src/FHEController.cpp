@@ -49,7 +49,6 @@ int FHEController::generate_context_network(int num_slots, int levels_required, 
     key_pair = context->KeyGen();
 
     print_moduli_chain(key_pair.publicKey->GetPublicElements()[0]);
-
     cout << endl;
 
     context->EvalMultKeyGen(key_pair.secretKey);
@@ -62,13 +61,13 @@ int FHEController::generate_context_network(int num_slots, int levels_required, 
 }
 
 
-void FHEController::generate_context_permutation(int num_slots, int levels_required, bool toy) {
+void FHEController::generate_context_permutation(int num_slots, int levels_required, bool toy, double delta) {
     CCParams<CryptoContextCKKSRNS> parameters;
 
     parameters.SetSecretKeyDist(lbcrypto::SPARSE_ENCAPSULATED);
 
-    int dcrtBits = 36;
-    int firstMod = 40;
+    int dcrtBits = 38;
+    int firstMod = 43;
 
     if (toy) {
         parameters.SetSecurityLevel(lbcrypto::HEStd_NotSet);
@@ -78,13 +77,12 @@ void FHEController::generate_context_permutation(int num_slots, int levels_requi
         if (num_slots <= 1 << 12) parameters.SetRingDim(1 << 13);
         if (num_slots <= 1 << 11) parameters.SetRingDim(1 << 12);
 
-        cout << "n: " << num_slots << endl;
     } else {
         parameters.SetSecurityLevel(lbcrypto::HEStd_128_classic);
         parameters.SetRingDim(1 << 16);
     }
 
-    cout << "N: " << parameters.GetRingDim() << ", ";
+    //cout << "N: " << parameters.GetRingDim() << ", ";
 
     parameters.SetBatchSize(num_slots);
 
@@ -94,12 +92,19 @@ void FHEController::generate_context_permutation(int num_slots, int levels_requi
     parameters.SetScalingTechnique(rescaleTech);
     parameters.SetFirstModSize(firstMod);
 
-    //Larger values allow to keep memory small, at the cost of increasing the modulus
-    parameters.SetNumLargeDigits(4);
+    //Larger values -> Smaller moduli
 
+
+    parameters.SetNumLargeDigits(2);
+
+    if (delta == 0.001) {
+        parameters.SetNumLargeDigits(3);
+    }
+    if (delta == 0.0001) {
+        parameters.SetNumLargeDigits(6);
+    }
 
     parameters.SetMultiplicativeDepth(levels_required);
-
 
     context = GenCryptoContext(parameters);
     context->Enable(PKE);
@@ -214,6 +219,14 @@ Ctxt FHEController::add_tree(vector<Ctxt> v) {
     return context->EvalAddMany(v);
 }
 
+Ctxt FHEController::evalpolychebyshev(const Ctxt &c, vector<double> coeffs) {
+    return context->EvalChebyshevSeries(c, coeffs, -1, 1);
+}
+
+Ctxt FHEController::sub(double a, const Ctxt &b) {
+    return context->EvalSub(a, b);
+}
+
 Ctxt FHEController::sub(const Ctxt &a, const Ctxt &b) {
     return context->EvalSub(a, b);
 }
@@ -272,9 +285,29 @@ Ctxt FHEController::clean_sigmoid(const Ctxt &in, double n) {
     return context->EvalAdd(context->EvalMult(sq, t1), t2end);
 }
 
+Ctxt FHEController::clean_sigmoid_and_scale(const Ctxt &in, double n) {
+    //(-n^2 * 2)x^3 + (n * 3)x^2
+    Ctxt sq = context->EvalSquare(in);
+    double t1 = n * 3;
+    double t2 = -n * 2;
+    Ctxt t2end = context->EvalMult(in, t2);
+    t2end = context->EvalMult(t2end, sq);
+
+    return context->EvalAdd(context->EvalMult(sq, t1), t2end);
+}
+
 
 Ctxt FHEController::sinc(const Ctxt &in, int poly_degree, double n) {
-    return context->EvalChebyshevFunction([n](double x) -> double { return sin(3.14159265358979323846 * x * n) / (3.14159265358979323846 * x * n); },
+    return context->EvalChebyshevFunction([n](double x) -> double { const double a = n * M_PI;
+                                              if (std::abs(x) < 1e-6)
+                                              {
+                                                  double t = a * x;
+                                                  return 1.0 - (t * t) / 6.0;  // Taylor 2° ordine
+                                              }
+                                              else
+                                              {
+                                                  return std::sin(a * x) / (a * x);
+                                              } },
                                           in,
                                           -1,
                                           1, poly_degree);

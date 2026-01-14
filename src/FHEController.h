@@ -46,7 +46,7 @@ public:
      * @param levels_required The required circuit depth
      * @param toy_parameters Choose whether to use toy parameters (true) or 128-bit security parameters (false)
      */
-    void generate_context_permutation(int num_slots, int levels_required, bool toy_parameters);
+    void generate_context_permutation(int num_slots, int levels_required, bool toy_parameters, double delta);
 
     /**
      * Generate a rotation key
@@ -92,11 +92,14 @@ public:
     // Subtract two ciphertexts/plaintexts
     Ctxt sub(const Ctxt& c1, const Ctxt& c2);
     Ctxt sub(const Ctxt& c, const Ptxt& p);
+    Ctxt sub(double a, const Ctxt& c2);
 
     // Multiply two ciphertexts/plaintext
     Ctxt mult(const Ctxt& c, const Ptxt& p);
     Ctxt mult(const Ctxt& c, double d);
     Ctxt mult(const Ctxt& c1, const Ctxt& c2);
+
+    Ctxt evalpolychebyshev(const Ctxt& c, vector<double> coeffs);
 
     // Rotate a ciphertext by a specified index
     Ctxt rot(const Ctxt& c, int index);
@@ -124,6 +127,7 @@ public:
     Ctxt clean_binary(const Ctxt& in, double scale);
     Ctxt clean_sign(const Ctxt& in);
     Ctxt clean_sigmoid(const Ctxt& in, double n);
+    Ctxt clean_sigmoid_and_scale(const Ctxt& in, double n);
 
     /**
       * Network-based operations

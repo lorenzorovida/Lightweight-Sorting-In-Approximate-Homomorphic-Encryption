@@ -11,8 +11,6 @@
 #include <functional>
 
 
-
-
 using namespace lbcrypto;
 using namespace std;
 using namespace std::chrono;
@@ -66,7 +64,7 @@ int main(int argc, char *argv[]) {
         cerr << "You must pick a sorting method. Add either --permutation or --network" << endl;
         return 1;
     } else {
-        cout << "Selected sorting type: " << to_string(sortingType) << endl;
+        if (verbose) cout << "Selected sorting type: " << to_string(sortingType) << endl;
     }
 
     Ctxt result;
@@ -78,9 +76,9 @@ int main(int argc, char *argv[]) {
             set_permutation_parameters(n, delta);
         }
 
-        cout << endl << "Ciphertext: " << endl << input_values << endl << endl << "δ: " << delta << ", ";
+        if (verbose) cout << endl << "Ciphertext: " << endl << input_values << endl << endl << "δ: " << delta << ", ";
 
-        controller.generate_context_permutation(n * n, circuit_depth, toy);
+        controller.generate_context_permutation(n * n, circuit_depth, toy, delta);
 
         Ctxt c = controller.encrypt(input_values, 0, input_values.size());
 
@@ -104,7 +102,7 @@ int main(int argc, char *argv[]) {
 
         cout << setprecision(precision_digits) << fixed;
 
-        cout << endl << "Ciphertext: " << endl << input_values << endl << endl << "δ: " << delta << ", n: " << n << endl;
+        if (verbose) cout << endl << "Ciphertext: " << endl << input_values << endl << endl << "δ: " << delta << ", n: " << n << endl;
 
         // Levels required by max(0, x) approximation
         int levels_consumption = poly_evaluation_cost(relu_degree);
@@ -135,7 +133,7 @@ int main(int argc, char *argv[]) {
 
 
 void evaluate_sorting_accuracy(const Ctxt& result) {
-    cout << "Level final: " << result->GetLevel() << "/" << circuit_depth << endl << endl;
+    cout << endl << "Final level: " << result->GetLevel() << "/" << circuit_depth << endl;
 
     vector<double> sorted_fhe = controller.decode(controller.decrypt(result));
 
@@ -153,8 +151,8 @@ void evaluate_sorting_accuracy(const Ctxt& result) {
 
     sort(input_values.begin(), input_values.end());
 
-    cout << endl << "Expected:  " << input_values << endl;
-    cout << endl << "Obtained:  " << results_fhe << endl << endl;
+    if (verbose) cout << endl << "Expected:  " << input_values << endl;
+    if (verbose) cout << endl << "Obtained:  " << results_fhe << endl << endl;
 
     int corrects = 0;
 
@@ -163,79 +161,96 @@ void evaluate_sorting_accuracy(const Ctxt& result) {
     }
     cout << "Corrects (up to " << delta << "): " << GREEN_TEXT << corrects << RESET_COLOR "/" << GREEN_TEXT << n <<RESET_COLOR<< endl;
 
-    cout << "Precision bits: " << GREEN_TEXT << precision_bits(input_values, results_fhe) << RESET_COLOR << endl;
+    if (verbose) cout << "Precision bits: " << GREEN_TEXT << precision_bits(input_values, results_fhe) << RESET_COLOR << endl;
 }
 
 void set_permutation_parameters(int n, double d) {
     int partial_depth = 0;
 
-    if (d >= 0.1) {
+    if (d == 0.1) {
         precision_digits = 1;
         sigmoid_scaling = 650;
         degree_sigmoid = 1006;
         partial_depth = 10;
-    } else if (d >= 0.01) {
+
+    } else if (d == 0.01) {
         precision_digits = 2;
         sigmoid_scaling = 350;
         degree_sigmoid = 495;
-        partial_depth = 10;
-
+        partial_depth = 9;
         partial_depth += 4; // Metto due clean
-    } else if (d >= 0.001) {
-        precision_digits = 3;
-        sigmoid_scaling = 3000;
-        degree_sigmoid = 2006;
-        partial_depth = 11;
 
+    } else if (d == 0.001) {
+        precision_digits = 3;
+        sigmoid_scaling = 2400;
+        degree_sigmoid = 2031;
+        partial_depth = 11;
         partial_depth += 6; // Metto tre clean
 
-    //} else if (d >= 0.0001) {
-    //    //Still todo
-    //    precision_digits = 4;
-    //    sigmoid_scaling = 16000;
-    //    degree_sigmoid = 32000;
-    //    partial_depth = 15;
-
-    //    cout << endl << "k: " << sigmoid_scaling << ", d: " << degree_sigmoid << endl << endl;
-    //    degree_sinc = 495;
-    } else {
-        cout << "The required min distance '" << d << "' is too small! But let's go :)" << endl;
+    } else if (d == 0.0001) {
         precision_digits = 4;
-        sigmoid_scaling = 650;
-        degree_sigmoid = 1006;
-        partial_depth = 14;
+        sigmoid_scaling = 4000;
+        degree_sigmoid = 4030;
+        partial_depth = 12;
+        partial_depth += 16; // Metto otto clean
 
-        cout << endl << "k: " << sigmoid_scaling << ", d: " << degree_sigmoid << endl << endl;
+
+    } else {
+        cerr << "The required min distance '" << d << "' is too small!" << endl;
     }
+
+    if (tieoffset) partial_depth += 2; //Tieoffset derivative
 
     cout << setprecision(precision_digits) << fixed;
 
     if (n <= 8) {
         degree_sinc = 59;
         partial_depth += 6;
+
+        if (delta == 0.0001) {
+            degree_sinc = 247;
+            partial_depth += 2;
+        }
     } else if (n == 16) {
-        degree_sinc = 59;
-        partial_depth += 6;
-    } else if (n == 32) {
         degree_sinc = 119;
         partial_depth += 7;
+
+        if (delta == 0.0001) {
+            degree_sinc = 495;
+            partial_depth += 3;
+        }
+    } else if (n == 32) {
+        degree_sinc = 247;
+        partial_depth += 8;
+
+        partial_depth += 2; //One clean
+
+        if (delta == 0.0001) {
+            degree_sinc = 495;
+            partial_depth += 2;
+        }
     } else if (n == 64) {
-        //degree_sinc = 247;
-        //partial_depth += 8;
         degree_sinc = 495;
         partial_depth += 9;
+
+        partial_depth += 2; //One clean
+
     } else if (n == 128) {
         degree_sinc = 495;
         partial_depth += 9;
 
         partial_depth += 4; //Two clean
+
+        if (delta == 0.0001) {
+            partial_depth += 2; //One clean
+        }
     }
 
     input_scale = 1.0;
 
     circuit_depth = partial_depth + 1; //For the last matrix mult
 
-    cout << "Circuit depth: " << circuit_depth << endl;
+    if (verbose) cout << "Circuit depth: " << circuit_depth << endl;
 
 }
 
@@ -351,7 +366,7 @@ void read_arguments(int argc, char *argv[]) {
 
             delta = min_diff;
 
-            cout << "n: " << n << endl << "δ: " << delta << endl << endl;
+            if (verbose) cout << "n: " << n << endl << "δ: " << delta << endl << endl;
 
         } catch (...) {
             cerr << "A problem occured in parsing the input vector" << endl;

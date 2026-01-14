@@ -54,8 +54,8 @@ class PermutationSorting {
         Ctxt sort(const Ctxt& in_exp, const Ctxt& in_rep);
 
     private:
-        Ctxt compute_indexing(const Ctxt &in_exp, const Ctxt &in_rep);
-        Ctxt compute_tieoffset(const Ctxt &in_exp, const Ctxt &in_rep);
+        Ctxt compute_indexing(const Ctxt &c);
+        Ctxt compute_tieoffset(const Ctxt &c);
         Ctxt compute_sorting(const Ctxt &indexes, const Ctxt &in_rep);
         void set_degrees(double d);
 };
