@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
 
         if (verbose) cout << endl << "Ciphertext: " << endl << input_values << endl << endl << "δ: " << delta << ", ";
 
-        controller.generate_context_permutation(n * n, circuit_depth, toy, delta);
+        controller.generate_context_permutation(n * n, circuit_depth, toy, n, delta);
 
         Ctxt c = controller.encrypt(input_values, 0, input_values.size());
 
@@ -161,7 +161,7 @@ void evaluate_sorting_accuracy(const Ctxt& result) {
     }
     cout << "Corrects (up to " << delta << "): " << GREEN_TEXT << corrects << RESET_COLOR "/" << GREEN_TEXT << n <<RESET_COLOR<< endl;
 
-    if (verbose) cout << "Precision bits: " << GREEN_TEXT << precision_bits(input_values, results_fhe) << RESET_COLOR << endl;
+    cout << "Precision bits: " << GREEN_TEXT << precision_bits(input_values, results_fhe) << RESET_COLOR << endl;
 }
 
 void set_permutation_parameters(int n, double d) {
@@ -175,7 +175,7 @@ void set_permutation_parameters(int n, double d) {
 
     } else if (d == 0.01) {
         precision_digits = 2;
-        sigmoid_scaling = 350;
+        sigmoid_scaling = 360;
         degree_sigmoid = 495;
         partial_depth = 9;
         partial_depth += 4; // Metto due clean

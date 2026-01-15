@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RESULTS_FILE="results/experiments-0.01.txt"
+RESULTS_FILE="results/seq-0.01.txt"
 
 
 
@@ -20,7 +20,7 @@ for INPUTS in 8 16 32 64 128; do
     values=()
 
     for i in $(seq 0 $((INPUTS-1))); do
-        values+=("0.$(printf "%02d" "$i")")
+        values+=("0.$(printf "%02d" $((i % 100)))")
     done
 
     vector="[${values[*]}]"

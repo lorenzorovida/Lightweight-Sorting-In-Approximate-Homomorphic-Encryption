@@ -1,0 +1,63 @@
+========================================
+           RANDOM WITH d=0.01           
+========================================
+
+----------------------------------------
+ Run with inputs: 8
+----------------------------------------
+log(QP): 1238, λ >= 128 bits
+⌛(The sorting took:): 11:130s
+
+Final level: 21/22
+Corrects (up to 0.01): 8/8
+Precision bits: 16.07
+          1008276544  peak memory footprint, inputs: 8
+
+----------------------------------------
+ Run with inputs: 16
+----------------------------------------
+log(QP): 1276, λ >= 128 bits
+⌛(The sorting took:): 12:556s
+
+Final level: 22/23
+Corrects (up to 0.01): 16/16
+Precision bits: 14.22
+          1220777408  peak memory footprint, inputs: 16
+
+----------------------------------------
+ Run with inputs: 32
+----------------------------------------
+log(QP): 1390, λ >= 128 bits
+⌛(The sorting took:): 15:876s
+
+Final level: 25/26
+Corrects (up to 0.01): 32/32
+Precision bits: 22.02
+          1484364224  peak memory footprint, inputs: 32
+
+----------------------------------------
+ Run with inputs: 64
+----------------------------------------
+log(QP): 1488, λ >= 128 bits
+⌛(The sorting took:): 19:91s
+
+Final level: 26/27
+Corrects (up to 0.01): 64/64
+Precision bits: 20.84
+          1826954624  peak memory footprint, inputs: 64
+
+----------------------------------------
+ Run with inputs: 128
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+log(QP): 1564, λ >= 128 bits
+⌛(The sorting took:): 22:16s
+
+Final level: 28/29
+Corrects (up to 0.01): 128/128
+Precision bits: 19.55
+          2080317504  peak memory footprint, inputs: 128
+
+========================================
+                   DONE                 
+========================================

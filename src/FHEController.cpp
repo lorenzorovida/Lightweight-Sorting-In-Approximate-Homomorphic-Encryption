@@ -61,7 +61,7 @@ int FHEController::generate_context_network(int num_slots, int levels_required, 
 }
 
 
-void FHEController::generate_context_permutation(int num_slots, int levels_required, bool toy, double delta) {
+void FHEController::generate_context_permutation(int num_slots, int levels_required, bool toy, int n, double delta) {
     CCParams<CryptoContextCKKSRNS> parameters;
 
     parameters.SetSecretKeyDist(lbcrypto::SPARSE_ENCAPSULATED);
@@ -95,11 +95,16 @@ void FHEController::generate_context_permutation(int num_slots, int levels_requi
     //Larger values -> Smaller moduli
 
 
-    parameters.SetNumLargeDigits(2);
+    parameters.SetNumLargeDigits(3);
+
 
     if (delta == 0.001) {
         parameters.SetNumLargeDigits(3);
+        if (n == 128) {
+            parameters.SetNumLargeDigits(4);
+        }
     }
+
     if (delta == 0.0001) {
         parameters.SetNumLargeDigits(6);
     }

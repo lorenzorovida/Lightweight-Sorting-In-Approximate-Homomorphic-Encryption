@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RESULTS_FILE="results/experiments-0.01.txt"
+RESULTS_FILE="results/seq-0.001.txt"
 
 
 

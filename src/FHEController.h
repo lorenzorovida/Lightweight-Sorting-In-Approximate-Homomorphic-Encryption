@@ -46,7 +46,7 @@ public:
      * @param levels_required The required circuit depth
      * @param toy_parameters Choose whether to use toy parameters (true) or 128-bit security parameters (false)
      */
-    void generate_context_permutation(int num_slots, int levels_required, bool toy_parameters, double delta);
+    void generate_context_permutation(int num_slots, int levels_required, bool toy_parameters, int n, double delta);
 
     /**
      * Generate a rotation key

@@ -13,15 +13,15 @@
 #include <random>
 #include <iomanip>
 
-#define GREEN_TEXT "\033[1;32m"
+//#define GREEN_TEXT "\033[1;32m"
 //#define RED_TEXT "\033[1;31m"
 //#define YELLOW_TEXT "\033[1;33m"
-#define RESET_COLOR "\033[0m"
+//#define RESET_COLOR "\033[0m"
 
-//#define GREEN_TEXT ""
+#define GREEN_TEXT ""
 #define RED_TEXT ""
 #define YELLOW_TEXT ""
-//#define RESET_COLOR ""
+#define RESET_COLOR ""
 
 using namespace std;
 

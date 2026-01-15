@@ -1,0 +1,62 @@
+========================================
+          RANDOM WITH d=0.001           
+========================================
+
+----------------------------------------
+ Run with inputs: 8
+----------------------------------------
+log(QP): 1390, λ >= 128 bits
+⌛(The sorting took:): 25:381s
+
+Final level: 25/26
+Corrects (up to 0.001): 8/8
+Precision bits: 12.876
+          1150965696  peak memory footprint, inputs: 8
+
+----------------------------------------
+ Run with inputs: 16
+----------------------------------------
+log(QP): 1488, λ >= 128 bits
+⌛(The sorting took:): 27:445s
+
+Final level: 26/27
+Corrects (up to 0.001): 16/16
+Precision bits: 11.585
+          1541905344  peak memory footprint, inputs: 16
+
+----------------------------------------
+ Run with inputs: 32
+----------------------------------------
+log(QP): 1662, λ >= 128 bits
+⌛(The sorting took:): 32:904s
+
+Final level: 29/30
+Corrects (up to 0.001): 32/32
+Precision bits: 17.199
+          1851974208  peak memory footprint, inputs: 32
+
+----------------------------------------
+ Run with inputs: 64
+----------------------------------------
+log(QP): 1700, λ >= 128 bits
+⌛(The sorting took:): 37:79s
+
+Final level: 30/31
+Corrects (up to 0.001): 64/64
+Precision bits: 16.723
+          2534974272  peak memory footprint, inputs: 64
+
+----------------------------------------
+ Run with inputs: 128
+----------------------------------------
+log(QP): 1656, λ >= 128 bits
+⌛(The sorting took:): 42:650s
+
+Final level: 32/33
+Corrects (up to 0.001): 128/128
+Precision bits: 19.980
+          3209570624  peak memory footprint, inputs: 128
+
+========================================
+                   DONE                 
+========================================
