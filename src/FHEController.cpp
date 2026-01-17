@@ -106,7 +106,11 @@ void FHEController::generate_context_permutation(int num_slots, int levels_requi
     }
 
     if (delta == 0.0001) {
-        parameters.SetNumLargeDigits(6);
+        dcrtBits = 36;
+        firstMod = 40;
+        parameters.SetScalingModSize(dcrtBits);
+        parameters.SetFirstModSize(firstMod);
+        parameters.SetNumLargeDigits(9);
     }
 
     parameters.SetMultiplicativeDepth(levels_required);

@@ -63,7 +63,7 @@ Ctxt PermutationSorting::compute_indexing(const Ctxt &c){
         cmp = controller.clean_sigmoid(cmp, n);
         cmp = controller.clean_sigmoid(cmp, n);
         cmp = controller.clean_sigmoid(cmp, n);
-        cmp = controller.clean_sigmoid(cmp, n);
+        //cmp = controller.clean_sigmoid(cmp, n);
     }
 
     Ctxt indexes = controller.rotsum(cmp, n);
@@ -87,6 +87,9 @@ Ctxt PermutationSorting::compute_tieoffset(const Ctxt &c){
         eq = controller.clean_sigmoid(eq, 1);
         eq = controller.clean_sigmoid(eq, 1);
         eq = controller.clean_sigmoid(eq, 1);
+        eq = controller.clean_sigmoid(eq, 1);
+        eq = controller.clean_sigmoid(eq, 1);
+        //eq = controller.clean_sigmoid(eq, 1);
         //eq = controller.clean_sigmoid(eq, 1);
     }
 

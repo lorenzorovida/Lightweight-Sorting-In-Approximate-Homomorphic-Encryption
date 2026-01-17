@@ -189,10 +189,10 @@ void set_permutation_parameters(int n, double d) {
 
     } else if (d == 0.0001) {
         precision_digits = 4;
-        sigmoid_scaling = 4000;
+        sigmoid_scaling = 3500;
         degree_sigmoid = 4030;
         partial_depth = 12;
-        partial_depth += 16; // Metto otto clean
+        partial_depth += 14; // Metto sette clean
 
 
     } else {
