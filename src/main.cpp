@@ -207,6 +207,7 @@ void set_permutation_parameters(int n, double d) {
         degree_sinc = 59;
         partial_depth += 6;
 
+
         if (delta == 0.0001) {
             degree_sinc = 247;
             partial_depth += 2;

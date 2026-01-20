@@ -89,7 +89,7 @@ Ctxt PermutationSorting::compute_tieoffset(const Ctxt &c){
         eq = controller.clean_sigmoid(eq, 1);
         eq = controller.clean_sigmoid(eq, 1);
         eq = controller.clean_sigmoid(eq, 1);
-        //eq = controller.clean_sigmoid(eq, 1);
+        eq = controller.clean_sigmoid(eq, 1);
         //eq = controller.clean_sigmoid(eq, 1);
     }
 

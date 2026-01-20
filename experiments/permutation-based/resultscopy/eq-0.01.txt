@@ -6,56 +6,56 @@
  Run with inputs: 8
 ----------------------------------------
 log(QP): 1238, λ >= 128 bits
-⌛(The sorting took:): 10:909s
+⌛(The sorting took:): 10:765s
 
 Final level: 21/22
 Corrects (up to 0.01): 8/8
-Precision bits: 20.32
-           861394560  peak memory footprint, inputs: 8
+Precision bits: 21.34
+           892048704  peak memory footprint, inputs: 8
 
 ----------------------------------------
  Run with inputs: 16
 ----------------------------------------
 log(QP): 1276, λ >= 128 bits
-⌛(The sorting took:): 12:520s
+⌛(The sorting took:): 12:548s
 
 Final level: 22/23
 Corrects (up to 0.01): 16/16
-Precision bits: 19.23
-          1042650752  peak memory footprint, inputs: 16
+Precision bits: 18.91
+          1124357056  peak memory footprint, inputs: 16
 
 ----------------------------------------
  Run with inputs: 32
 ----------------------------------------
 log(QP): 1390, λ >= 128 bits
-⌛(The sorting took:): 15:938s
+⌛(The sorting took:): 16:443s
 
 Final level: 25/26
 Corrects (up to 0.01): 32/32
-Precision bits: 21.77
-          1781930880  peak memory footprint, inputs: 32
+Precision bits: 21.88
+          1409079872  peak memory footprint, inputs: 32
 
 ----------------------------------------
  Run with inputs: 64
 ----------------------------------------
 log(QP): 1488, λ >= 128 bits
-⌛(The sorting took:): 18:502s
+⌛(The sorting took:): 18:779s
 
 Final level: 26/27
 Corrects (up to 0.01): 64/64
-Precision bits: 21.07
-          1695751296  peak memory footprint, inputs: 64
+Precision bits: 21.10
+          1860492992  peak memory footprint, inputs: 64
 
 ----------------------------------------
  Run with inputs: 128
 ----------------------------------------
 log(QP): 1564, λ >= 128 bits
-⌛(The sorting took:): 23:14s
+⌛(The sorting took:): 22:423s
 
 Final level: 28/29
 Corrects (up to 0.01): 128/128
-Precision bits: 19.50
-          2382094656  peak memory footprint, inputs: 128
+Precision bits: 19.93
+          2160631936  peak memory footprint, inputs: 128
 
 ========================================
              EXPERIMENT DONE            
