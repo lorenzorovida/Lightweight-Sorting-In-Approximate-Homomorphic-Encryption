@@ -28,9 +28,10 @@ public:
      * @param num_slots The number of slots in the ciphertext.
      * @param levels_required The required circuit depth
      * @param toy_parameters Choose whether to use toy parameters (true) or 128-bit security parameters (false)
+     * @param delta The delta value of the chosen input
      * @return the total depth of the circuit, including the bootstrapping operation
      */
-    int generate_context_network(int num_slots, int levels_required, bool toy_parameters);
+    int generate_context_network(int num_slots, int levels_required, bool toy_parameters, double delta);
 
     /**
      * Generate the rotation keys required by the network-based sorting
@@ -98,8 +99,6 @@ public:
     Ctxt mult(const Ctxt& c, const Ptxt& p);
     Ctxt mult(const Ctxt& c, double d);
     Ctxt mult(const Ctxt& c1, const Ctxt& c2);
-
-    Ctxt evalpolychebyshev(const Ctxt& c, vector<double> coeffs);
 
     // Rotate a ciphertext by a specified index
     Ctxt rot(const Ctxt& c, int index);

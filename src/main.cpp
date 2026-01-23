@@ -17,7 +17,7 @@ using namespace std::chrono;
 
 void read_arguments(int argc, char *argv[]);
 void set_permutation_parameters(int n, double d);
-void set_network_parameters(double d);
+void set_network_parameters(int n, double d);
 void evaluate_sorting_accuracy(const Ctxt& result);
 
 
@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
         result = sorting.sort(in_exp, in_rep);
 
     } else if (sortingType == NETWORK) {
-        set_network_parameters(delta);
+        set_network_parameters(n, delta);
 
         cout << setprecision(precision_digits) << fixed;
 
@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
         // One more level for the masking operation
         levels_consumption += 1;
 
-        circuit_depth = controller.generate_context_network(n, levels_consumption, toy);
+        circuit_depth = controller.generate_context_network(n, levels_consumption, toy, delta);
         controller.generate_rotation_keys_network(n);
 
         for (std::size_t i = 0; i < input_values.size(); i++) {
@@ -255,19 +255,20 @@ void set_permutation_parameters(int n, double d) {
 
 }
 
-void set_network_parameters(double d) {
+void set_network_parameters(int n, double d) {
     if (d >= 0.1) {
         precision_digits = 1;
         relu_degree = 119;
     } else if (d >= 0.01) {
         precision_digits = 2;
-        relu_degree = 495;
+        relu_degree = 351;
+
+        if (n > 1024) {
+            relu_degree = 495;
+        }
+
     } else if (d >= 0.001) {
         precision_digits = 3;
-        relu_degree = 495;
-    } else if (d >= 0.0001) {
-        //Still todo
-        precision_digits = 4;
         relu_degree = 495;
     } else {
         cerr << "The required min distance '" << d << "' is too small!" << endl;

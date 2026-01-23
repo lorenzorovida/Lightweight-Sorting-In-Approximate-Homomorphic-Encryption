@@ -7,7 +7,7 @@
 Ctxt NetworkSorting::sort(const Ctxt& in) {
     int iterations = (log2(n) * (log2(n) + 1)) / 2;
 
-    Ctxt clone_in = controller.add(in, 0);
+    Ctxt clone_in = in->Clone();
 
     int current_iteration = 1;
 
@@ -48,7 +48,7 @@ Ctxt NetworkSorting::swap(const Ctxt &in, int arrowsdelta, int round, int stage)
     Ctxt rot_neg = controller.rot(in, -arrowsdelta);
 
     // This performs the evaluation of the min function
-    Ctxt m1 = controller.relu(controller.sub(in, rot_pos), relu_degree, n);
+    Ctxt m1 = controller.sub(in, controller.relu(controller.sub(in, rot_pos), relu_degree, n));
 
     // The other values are obtained in function of m1
     Ctxt m3 = controller.sub(controller.add(in, rot_pos), m1);

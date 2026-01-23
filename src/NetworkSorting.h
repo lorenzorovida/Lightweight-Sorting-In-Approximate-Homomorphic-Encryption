@@ -16,13 +16,13 @@ using namespace std::chrono;
 class NetworkSorting {
     FHEController controller;
     int n;
-    double relu_degree;
+    int relu_degree;
     bool verbose;
 
 public:
     NetworkSorting(FHEController controller,
                        int n,
-                       double relu_degree,
+                       int relu_degree,
                        bool verbose)
             : controller(controller),
               n(n),

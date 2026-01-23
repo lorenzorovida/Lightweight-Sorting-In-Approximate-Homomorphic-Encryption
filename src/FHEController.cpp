@@ -4,15 +4,22 @@
 
 #include "FHEController.h"
 
-int FHEController::generate_context_network(int num_slots, int levels_required, bool toy_parameters) {
+int FHEController::generate_context_network(int num_slots, int levels_required, bool toy_parameters, double delta) {
     CCParams<CryptoContextCKKSRNS> parameters;
 
     parameters.SetSecretKeyDist(SPARSE_TERNARY);
     vector<uint32_t> level_budget;
 
-    level_budget = {2, 2};
-    int dcrtBits = 54;
-    int firstMod = 55;
+    level_budget = {3, 3};
+
+    int dcrtBits = 51;
+    int firstMod = 54;
+
+    if (delta == 0.001) {
+        level_budget = {2, 3};
+        dcrtBits = 56;
+        firstMod = 57;
+    }
 
     if (toy_parameters) {
         parameters.SetSecurityLevel(lbcrypto::HEStd_NotSet);
@@ -24,7 +31,11 @@ int FHEController::generate_context_network(int num_slots, int levels_required, 
 
     cout << "Levels required: " << levels_required << endl;
 
-    parameters.SetNumLargeDigits(5);
+    parameters.SetNumLargeDigits(6);
+
+    if (delta == 0.001)
+        parameters.SetNumLargeDigits(7);
+
     parameters.SetBatchSize(num_slots);
 
     ScalingTechnique rescaleTech = FLEXIBLEAUTO;
@@ -226,10 +237,6 @@ Ctxt FHEController::add(const Ctxt &a, double d) {
 
 Ctxt FHEController::add_tree(vector<Ctxt> v) {
     return context->EvalAddMany(v);
-}
-
-Ctxt FHEController::evalpolychebyshev(const Ctxt &c, vector<double> coeffs) {
-    return context->EvalChebyshevSeries(c, coeffs, -1, 1);
 }
 
 Ctxt FHEController::sub(double a, const Ctxt &b) {
