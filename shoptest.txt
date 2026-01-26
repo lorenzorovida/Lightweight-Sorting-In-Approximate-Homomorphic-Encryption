@@ -58,3 +58,8 @@ cd ..
 cd permutation-based
 
 ./run-all.sh
+
+rm -rf ~/.local/Homebrew
+rm -rf ~/.local/bin/brew
+rm -rf ~/openfhe-development
+rm -rf ~/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption
