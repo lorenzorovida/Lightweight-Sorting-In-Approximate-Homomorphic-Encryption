@@ -1,0 +1,213 @@
+========================================
+          RANDOM WITH d=0.001           
+========================================
+
+----------------------------------------
+ Run with inputs: 16
+----------------------------------------
+Levels required: 10
+             1278720  peak memory footprint, inputs: 16
+
+----------------------------------------
+ Run with inputs: 32
+----------------------------------------
+Levels required: 10
+             1262272  peak memory footprint, inputs: 32
+
+----------------------------------------
+ Run with inputs: 64
+----------------------------------------
+Levels required: 10
+             1262272  peak memory footprint, inputs: 64
+
+----------------------------------------
+ Run with inputs: 128
+----------------------------------------
+Levels required: 10
+             1278720  peak memory footprint, inputs: 128
+
+----------------------------------------
+ Run with inputs: 256
+----------------------------------------
+Levels required: 10
+             1278720  peak memory footprint, inputs: 256
+
+----------------------------------------
+ Run with inputs: 512
+----------------------------------------
+Levels required: 10
+             1278720  peak memory footprint, inputs: 512
+
+----------------------------------------
+ Run with inputs: 1024
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+             1295040  peak memory footprint, inputs: 1024
+
+----------------------------------------
+ Run with inputs: 2048
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+             1327872  peak memory footprint, inputs: 2048
+
+----------------------------------------
+ Run with inputs: 4096
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+             1377024  peak memory footprint, inputs: 4096
+
+----------------------------------------
+ Run with inputs: 8192
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+             1508096  peak memory footprint, inputs: 8192
+
+========================================
+                   DONE                 
+========================================
+========================================
+          RANDOM WITH d=0.001           
+========================================
+
+----------------------------------------
+ Run with inputs: 16
+----------------------------------------
+Levels required: 10
+             1262272  peak memory footprint, inputs: 16
+
+----------------------------------------
+ Run with inputs: 32
+----------------------------------------
+Levels required: 10
+             1262272  peak memory footprint, inputs: 32
+
+----------------------------------------
+ Run with inputs: 64
+----------------------------------------
+Levels required: 10
+             1491648  peak memory footprint, inputs: 64
+
+----------------------------------------
+ Run with inputs: 128
+----------------------------------------
+Levels required: 10
+             1262272  peak memory footprint, inputs: 128
+
+----------------------------------------
+ Run with inputs: 256
+----------------------------------------
+Levels required: 10
+             1278720  peak memory footprint, inputs: 256
+
+----------------------------------------
+ Run with inputs: 512
+----------------------------------------
+Levels required: 10
+             1262272  peak memory footprint, inputs: 512
+
+----------------------------------------
+ Run with inputs: 1024
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+             1327808  peak memory footprint, inputs: 1024
+
+----------------------------------------
+ Run with inputs: 2048
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+             1311424  peak memory footprint, inputs: 2048
+
+----------------------------------------
+ Run with inputs: 4096
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+             1377024  peak memory footprint, inputs: 4096
+
+----------------------------------------
+ Run with inputs: 8192
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+             1524544  peak memory footprint, inputs: 8192
+
+========================================
+                   DONE                 
+========================================
+========================================
+          RANDOM WITH d=0.001           
+========================================
+
+----------------------------------------
+ Run with inputs: 16
+----------------------------------------
+Levels required: 10
+             1262272  peak memory footprint, inputs: 16
+
+----------------------------------------
+ Run with inputs: 32
+----------------------------------------
+Levels required: 10
+             1262272  peak memory footprint, inputs: 32
+
+----------------------------------------
+ Run with inputs: 64
+----------------------------------------
+Levels required: 10
+             1262272  peak memory footprint, inputs: 64
+
+----------------------------------------
+ Run with inputs: 128
+----------------------------------------
+Levels required: 10
+             1262272  peak memory footprint, inputs: 128
+
+----------------------------------------
+ Run with inputs: 256
+----------------------------------------
+Levels required: 10
+             1262272  peak memory footprint, inputs: 256
+
+----------------------------------------
+ Run with inputs: 512
+----------------------------------------
+Levels required: 10
+             1262272  peak memory footprint, inputs: 512
+
+----------------------------------------
+ Run with inputs: 1024
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+             1295040  peak memory footprint, inputs: 1024
+
+----------------------------------------
+ Run with inputs: 2048
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+             1327872  peak memory footprint, inputs: 2048
+
+----------------------------------------
+ Run with inputs: 4096
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+             1360576  peak memory footprint, inputs: 4096
+
+----------------------------------------
+ Run with inputs: 8192
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+             1524544  peak memory footprint, inputs: 8192
+
+========================================
+                   DONE                 
+========================================

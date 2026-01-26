@@ -1,32 +1,60 @@
-mkdir -p ~/.local/Homebrew &&
-curl -L https://github.com/Homebrew/brew/tarball/master |
+mkdir -p ~/.local/Homebrew
+
+curl -L https://github.com/Homebrew/brew/tarball/master | \
 tar xz --strip 1 -C ~/.local/Homebrew
-mkdir -p ~/.local/bin &&
+
+mkdir -p ~/.local/bin
+
 ln -s ~/.local/Homebrew/bin/brew ~/.local/bin
-#cat << 'EOF' >> ~/.bashrc # or ~/.zshrc
-#[ -d "$HOME/.local/bin" ] &&
-#export PATH="$PATH:$HOME/.local/bin" # or "$HOME/.local/bin:$PATH"
-#EOF
+
+export PATH="$PATH:$HOME/.local/bin"
+
 brew install cmake
+
 brew install libomp
+
 git clone https://github.com/openfheorg/openfhe-development
+
 cd openfhe-development
+
+sed -i '' 's|/opt/homebrew/opt/libomp/lib|'"$HOME"'/.local/opt/libomp/lib|g' CMakeLists.txt
+sed -i '' 's|/opt/homebrew/opt/libomp/include|'"$HOME"'/.local/opt/libomp/include|g' CMakeLists.txt
+
 mkdir build
+
 cd build
-cmake -DCMAKE_CROSSCOMPILING=1 -DRUN_HAVE_STD_REGEX=0 -DRUN_HAVE_POSIX_REGEX=0 -DCMAKE_INSTALL_PREFIX=$HOME/ofdir ..
-cmake -DCMAKE_INSTALL_PREFIX=$HOME/ofdir ..
+
+cmake -DCMAKE_CROSSCOMPILING=1 \
+      -DRUN_HAVE_STD_REGEX=0 \
+      -DRUN_HAVE_POSIX_REGEX=0 \
+      -DCMAKE_INSTALL_PREFIX=$HOME/ofdir ..
+
 make install
+
 cd ..
 cd ..
-git clone --branch discrete-cleaning --single-branch https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption
+
+git clone --branch discrete-cleaning --single-branch \
+https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption
+
 cd Lightweight-Sorting-In-Approximate-Homomorphic-Encryption
+
+sed -i '' 's|/Users/narger/Desktop/OpenFHE-Fork/openfhe-development-chebyshevSIMD/build|'"$HOME"'/openfhe-development/build|g' CMakeLists.txt
+
 mkdir build
+
 cd build
+
 cmake ..
+
 make -j 8
+
 cd ..
-cd experiments
+cd experiments/network-based
+
+./run-all.sh
+
+cd ..
 cd permutation-based
-./experiment-inputs.sh
-./experiment1.sh
-./experiment2.sh
+
+./run-all.sh
