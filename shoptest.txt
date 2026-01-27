@@ -31,7 +31,7 @@ cmake -DCMAKE_CROSSCOMPILING=1 \
       -DRUN_HAVE_POSIX_REGEX=0 \
       -DCMAKE_INSTALL_PREFIX=$HOME/ofdir ..
 
-make install
+make install -j 16
 
 cd ..
 cd ..
