@@ -1,3 +1,5 @@
+xcode-select --install
+
 mkdir -p ~/.local/Homebrew
 
 curl -L https://github.com/Homebrew/brew/tarball/master | \
