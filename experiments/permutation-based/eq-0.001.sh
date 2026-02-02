@@ -1,12 +1,10 @@
 #!/bin/bash
 
-RESULTS_FILE="results/random-0.0001.txt"
+RESULTS_FILE="results/eq-0.01.txt"
 
-# Optional: clear previous results
-# > "$RESULTS_FILE"
 
 echo "========================================" | tee -a "$RESULTS_FILE"
-echo "          RANDOM WITH d=0.001           " | tee -a "$RESULTS_FILE"
+echo "            EQUAL WITH d=0.01           " | tee -a "$RESULTS_FILE"
 echo "========================================" | tee -a "$RESULTS_FILE"
 echo "" | tee -a "$RESULTS_FILE"
 
@@ -15,12 +13,24 @@ for INPUTS in 8 16 32 64 128; do
     echo " Run with inputs: $INPUTS" | tee -a "$RESULTS_FILE"
     echo "----------------------------------------" | tee -a "$RESULTS_FILE"
 
-    output=$(/usr/bin/time -l ../../build/Sort --random "$INPUTS" --delta 0.0001 --permutation --tieoffset 2> >(grep "peak memory footprint"))
+    values=()
+
+    for i in $(seq 0 $((INPUTS-1))); do
+        values+=("0.001")
+    done
+    
+    vector="[${values[*]}]"
+    vector="${vector// /, }"
+
+    echo "Input: $vector"
+
+    output=$(/usr/bin/time -l ../../build/Sort --inline "$vector" --delta 0.001 --permutation --tieoffset 2> >(grep "peak memory footprint"))
+
 
     echo "$output, inputs: $INPUTS" | tee -a "$RESULTS_FILE"
     echo "" | tee -a "$RESULTS_FILE"
 done
 
 echo "========================================" | tee -a "$RESULTS_FILE"
-echo "                   DONE                 " | tee -a "$RESULTS_FILE"
+echo "             EXPERIMENT DONE            " | tee -a "$RESULTS_FILE"
 echo "========================================" | tee -a "$RESULTS_FILE"

@@ -1,0 +1,133 @@
+========================================
+Running: random-0.01.sh
+========================================
+========================================
+           RANDOM WITH d=0.01           
+========================================
+
+----------------------------------------
+ Run with inputs: 16
+----------------------------------------
+Levels required: 10
+log(QP): 1730
+⌛(The sorting took:): 38:36s
+
+Final level: 25/27
+Corrects (up to 0.01): 16/16
+Precision bits: 10.29
+          8039929904  peak memory footprint, inputs: 16
+
+----------------------------------------
+ Run with inputs: 32
+----------------------------------------
+Levels required: 10
+log(QP): 1730
+⌛(The sorting took:): 55:324s
+
+Final level: 25/27
+Corrects (up to 0.01): 32/32
+Precision bits: 11.42
+          9133218584  peak memory footprint, inputs: 32
+
+----------------------------------------
+ Run with inputs: 64
+----------------------------------------
+Levels required: 10
+log(QP): 1730
+⌛(The sorting took:): 1.16:630
+
+Final level: 25/27
+Corrects (up to 0.01): 64/64
+Precision bits: 10.22
+          9904594216  peak memory footprint, inputs: 64
+
+----------------------------------------
+ Run with inputs: 128
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+log(QP): 1730
+⌛(The sorting took:): 1.42:293
+
+Final level: 25/27
+Corrects (up to 0.01): 128/128
+Precision bits: 7.88
+         13431990040  peak memory footprint, inputs: 128
+
+----------------------------------------
+ Run with inputs: 256
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+log(QP): 1730
+⌛(The sorting took:): 2.10:844
+
+Final level: 25/27
+Corrects (up to 0.01): 256/256
+Precision bits: 7.51
+         14391323064  peak memory footprint, inputs: 256
+
+----------------------------------------
+ Run with inputs: 512
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+log(QP): 1730
+⌛(The sorting took:): 2.40:458
+
+Final level: 25/27
+Corrects (up to 0.01): 512/512
+Precision bits: 6.79
+         16335236904  peak memory footprint, inputs: 512
+
+----------------------------------------
+ Run with inputs: 1024
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+log(QP): 1730
+⌛(The sorting took:): 3.29:958
+
+Final level: 25/27
+Corrects (up to 0.01): 1024/1024
+Precision bits: 6.66
+         22264725440  peak memory footprint, inputs: 1024
+
+----------------------------------------
+ Run with inputs: 2048
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+log(QP): 1730
+⌛(The sorting took:): 4.17:468
+
+Final level: 25/27
+Corrects (up to 0.01): 2047/2048
+Precision bits: 6.44
+         24357209512  peak memory footprint, inputs: 2048
+
+----------------------------------------
+ Run with inputs: 4096
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+log(QP): 1730
+⌛(The sorting took:): 5.9:178
+
+Final level: 25/27
+Corrects (up to 0.01): 4080/4096
+Precision bits: 6.38
+         28100087776  peak memory footprint, inputs: 4096
+
+----------------------------------------
+ Run with inputs: 8192
+----------------------------------------
+INFO: the random input vector will contain duplicates.
+Levels required: 10
+log(QP): 1730
+⌛(The sorting took:): 9.42:441
+
+Final level: 25/27
+Corrects (up to 0.01): 8170/8192
+Precision bits: 6.13
+         515210866571  peak memory footprint, inputs: 8192
