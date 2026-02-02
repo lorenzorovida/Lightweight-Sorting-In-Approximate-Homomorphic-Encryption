@@ -4,15 +4,22 @@
 
 #include "FHEController.h"
 
-int FHEController::generate_context_network(int num_slots, int levels_required, bool toy_parameters) {
+int FHEController::generate_context_network(int num_slots, int levels_required, bool toy_parameters, double delta) {
     CCParams<CryptoContextCKKSRNS> parameters;
 
     parameters.SetSecretKeyDist(SPARSE_TERNARY);
     vector<uint32_t> level_budget;
 
-    level_budget = {2, 2};
-    int dcrtBits = 54;
-    int firstMod = 55;
+    level_budget = {3, 3};
+
+    int dcrtBits = 51;
+    int firstMod = 54;
+
+    if (delta == 0.001) {
+        level_budget = {2, 3};
+        dcrtBits = 56;
+        firstMod = 57;
+    }
 
     if (toy_parameters) {
         parameters.SetSecurityLevel(lbcrypto::HEStd_NotSet);
@@ -24,7 +31,11 @@ int FHEController::generate_context_network(int num_slots, int levels_required, 
 
     cout << "Levels required: " << levels_required << endl;
 
-    parameters.SetNumLargeDigits(5);
+    parameters.SetNumLargeDigits(6);
+
+    if (delta == 0.001)
+        parameters.SetNumLargeDigits(7);
+
     parameters.SetBatchSize(num_slots);
 
     ScalingTechnique rescaleTech = FLEXIBLEAUTO;
@@ -49,7 +60,6 @@ int FHEController::generate_context_network(int num_slots, int levels_required, 
     key_pair = context->KeyGen();
 
     print_moduli_chain(key_pair.publicKey->GetPublicElements()[0]);
-
     cout << endl;
 
     context->EvalMultKeyGen(key_pair.secretKey);
@@ -62,13 +72,13 @@ int FHEController::generate_context_network(int num_slots, int levels_required, 
 }
 
 
-void FHEController::generate_context_permutation(int num_slots, int levels_required, bool toy) {
+void FHEController::generate_context_permutation(int num_slots, int levels_required, bool toy, int n, double delta) {
     CCParams<CryptoContextCKKSRNS> parameters;
 
-    parameters.SetSecretKeyDist(lbcrypto::UNIFORM_TERNARY);
+    parameters.SetSecretKeyDist(lbcrypto::SPARSE_ENCAPSULATED);
 
-    int dcrtBits = 45;
-    int firstMod = 48;
+    int dcrtBits = 38;
+    int firstMod = 43;
 
     if (toy) {
         parameters.SetSecurityLevel(lbcrypto::HEStd_NotSet);
@@ -78,13 +88,12 @@ void FHEController::generate_context_permutation(int num_slots, int levels_requi
         if (num_slots <= 1 << 12) parameters.SetRingDim(1 << 13);
         if (num_slots <= 1 << 11) parameters.SetRingDim(1 << 12);
 
-        cout << "n: " << num_slots << endl;
     } else {
         parameters.SetSecurityLevel(lbcrypto::HEStd_128_classic);
         parameters.SetRingDim(1 << 16);
     }
 
-    cout << "N: " << parameters.GetRingDim() << ", ";
+    //cout << "N: " << parameters.GetRingDim() << ", ";
 
     parameters.SetBatchSize(num_slots);
 
@@ -94,11 +103,28 @@ void FHEController::generate_context_permutation(int num_slots, int levels_requi
     parameters.SetScalingTechnique(rescaleTech);
     parameters.SetFirstModSize(firstMod);
 
-    //This keeps memory small, at the cost of increasing the modulus
-    parameters.SetNumLargeDigits(2);
+    //Larger values -> Smaller moduli
+
+
+    parameters.SetNumLargeDigits(3);
+
+
+    if (delta == 0.001) {
+        parameters.SetNumLargeDigits(3);
+        if (n == 128) {
+            parameters.SetNumLargeDigits(4);
+        }
+    }
+
+    if (delta == 0.0001) {
+        dcrtBits = 36;
+        firstMod = 40;
+        parameters.SetScalingModSize(dcrtBits);
+        parameters.SetFirstModSize(firstMod);
+        parameters.SetNumLargeDigits(9);
+    }
 
     parameters.SetMultiplicativeDepth(levels_required);
-
 
     context = GenCryptoContext(parameters);
     context->Enable(PKE);
@@ -111,7 +137,7 @@ void FHEController::generate_context_permutation(int num_slots, int levels_requi
 
     print_moduli_chain(key_pair.publicKey->GetPublicElements()[0]);
 
-    cout << ", λ: 128 bits" << endl;
+    cout << ", λ >= 128 bits" << endl;
 
     context->EvalMultKeyGen(key_pair.secretKey);
 
@@ -213,6 +239,10 @@ Ctxt FHEController::add_tree(vector<Ctxt> v) {
     return context->EvalAddMany(v);
 }
 
+Ctxt FHEController::sub(double a, const Ctxt &b) {
+    return context->EvalSub(a, b);
+}
+
 Ctxt FHEController::sub(const Ctxt &a, const Ctxt &b) {
     return context->EvalSub(a, b);
 }
@@ -255,14 +285,54 @@ Ctxt FHEController::rotsum(const Ctxt &in, int n) {
 
 Ctxt FHEController::sigmoid(const Ctxt &in, int n, int degree, int scaling) {
     return context->EvalChebyshevFunction([scaling, n](double x) -> double {
-        return 1/(n + n * pow(2.71828182846, -scaling*x));
+        return 1/(n + n * exp(-scaling*x));
 
     }, in, -1, 1, degree);
 }
 
+Ctxt FHEController::clean_sigmoid(const Ctxt &in, double n) {
+    //(-n^2 * 2)x^3 + (n * 3)x^2
+    Ctxt sq = context->EvalSquare(in);
+    double t1 = n * 3;
+    double t2 = -n * n * 2;
+    Ctxt t2end = context->EvalMult(in, t2);
+    t2end = context->EvalMult(t2end, sq);
 
-Ctxt FHEController::sinc(const Ctxt &in, int poly_degree, int n) {
-    return context->EvalChebyshevFunction([n](double x) -> double { return sin(3.14159265358979323846 * x * n) / (3.14159265358979323846 * x * n); },
+    return context->EvalAdd(context->EvalMult(sq, t1), t2end);
+}
+
+Ctxt FHEController::clean_sigmoid_and_scale(const Ctxt &in, double n) {
+    //(-n^2 * 2)x^3 + (n * 3)x^2
+    Ctxt sq = context->EvalSquare(in);
+    double t1 = n * 3;
+    double t2 = -n * 2;
+    Ctxt t2end = context->EvalMult(in, t2);
+    t2end = context->EvalMult(t2end, sq);
+
+    return context->EvalAdd(context->EvalMult(sq, t1), t2end);
+}
+
+
+Ctxt FHEController::sinc(const Ctxt &in, int poly_degree, double n) {
+    return context->EvalChebyshevFunction([n](double x) -> double { const double a = n * M_PI;
+                                              if (std::abs(x) < 1e-6)
+                                              {
+                                                  double t = a * x;
+                                                  return 1.0 - (t * t) / 6.0;  // Taylor 2° ordine
+                                              }
+                                              else
+                                              {
+                                                  return std::sin(a * x) / (a * x);
+                                              } },
+                                          in,
+                                          -1,
+                                          1, poly_degree);
+}
+
+
+
+Ctxt FHEController::double_sinc(const Ctxt &in, int poly_degree, double n) {
+    return context->EvalChebyshevFunction([n](double x) -> double { return sin(3.14159265358979323846 * x * n) / (3.14159265358979323846 * x * n) * sin(3.14159265358979323846 * x * n) / (3.14159265358979323846 * x * n); },
                                           in,
                                           -1,
                                           1, poly_degree);
@@ -273,6 +343,32 @@ Ctxt FHEController::relu(const Ctxt &in, int poly_degree, int n) {
                                           in,
                                           -1,
                                           1, poly_degree);
+}
+
+Ctxt FHEController::clean_binary(const Ctxt &in, double scale) {
+    //3x^2 - 2x^3
+
+
+    //Scalato sarebbe 3/scale * (scale*x)^2 - 2/scale * (scale*x)^3
+
+    cout << "Livello in: " << in->GetLevel() << endl;
+
+    Ctxt square = context->EvalSquare(in);
+    Ctxt twox = context->EvalMult(in, 2.0/scale);
+
+    Ctxt term1 = context->EvalMult(square, 3.0/scale);
+    Ctxt term2 = context->EvalMult(twox, square);
+
+    cout << "Livello out: " << context->EvalSub(term1, term2)->GetLevel() << endl;
+
+    return context->EvalSub(term1, term2);
+}
+
+
+Ctxt FHEController::clean_sign(const Ctxt &in) {
+    //return context->EvalPoly(in, {-24, 60, -50, 15, 0, 0});
+    //c, x, x^2, ...
+    return context->EvalPoly(in, {0, 0, 15, -50, 60, -24});
 }
 
 void FHEController::print(const Ctxt &c, int slots, string prefix) {

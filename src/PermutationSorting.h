@@ -27,6 +27,7 @@ class PermutationSorting {
     double delta;
     bool toy;
     bool verbose;
+    bool clean_permutation_matrix;
 
     public:
     PermutationSorting(FHEController controller,
@@ -37,7 +38,8 @@ class PermutationSorting {
                        int n,
                        double delta,
                        bool toy,
-                       bool verbose)
+                       bool verbose,
+                       bool clean_permutation_matrix)
             : controller(controller),
               sigmoid_scaling(sigmoid_scaling),
               degree_sigmoid(degree_sigmoid),
@@ -46,13 +48,14 @@ class PermutationSorting {
               n(n),
               delta(delta),
               toy(toy),
-              verbose(verbose) {}
+              verbose(verbose),
+              clean_permutation_matrix(clean_permutation_matrix) {}
 
         Ctxt sort(const Ctxt& in_exp, const Ctxt& in_rep);
 
     private:
-        Ctxt compute_indexing(const Ctxt &in_exp, const Ctxt &in_rep);
-        Ctxt compute_tieoffset(const Ctxt &in_exp, const Ctxt &in_rep);
+        Ctxt compute_indexing(const Ctxt &c);
+        Ctxt compute_tieoffset(const Ctxt &c);
         Ctxt compute_sorting(const Ctxt &indexes, const Ctxt &in_rep);
         void set_degrees(double d);
 };

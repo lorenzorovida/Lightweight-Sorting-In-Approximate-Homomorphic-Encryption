@@ -28,9 +28,10 @@ public:
      * @param num_slots The number of slots in the ciphertext.
      * @param levels_required The required circuit depth
      * @param toy_parameters Choose whether to use toy parameters (true) or 128-bit security parameters (false)
+     * @param delta The delta value of the chosen input
      * @return the total depth of the circuit, including the bootstrapping operation
      */
-    int generate_context_network(int num_slots, int levels_required, bool toy_parameters);
+    int generate_context_network(int num_slots, int levels_required, bool toy_parameters, double delta);
 
     /**
      * Generate the rotation keys required by the network-based sorting
@@ -46,7 +47,7 @@ public:
      * @param levels_required The required circuit depth
      * @param toy_parameters Choose whether to use toy parameters (true) or 128-bit security parameters (false)
      */
-    void generate_context_permutation(int num_slots, int levels_required, bool toy_parameters);
+    void generate_context_permutation(int num_slots, int levels_required, bool toy_parameters, int n, double delta);
 
     /**
      * Generate a rotation key
@@ -92,6 +93,7 @@ public:
     // Subtract two ciphertexts/plaintexts
     Ctxt sub(const Ctxt& c1, const Ctxt& c2);
     Ctxt sub(const Ctxt& c, const Ptxt& p);
+    Ctxt sub(double a, const Ctxt& c2);
 
     // Multiply two ciphertexts/plaintext
     Ctxt mult(const Ctxt& c, const Ptxt& p);
@@ -115,8 +117,16 @@ public:
     Ctxt rotsum(const Ctxt& in, int n);
 
     // Approximation of sinc function
-    Ctxt sinc(const Ctxt& in, int degree, int n);
+    Ctxt sinc(const Ctxt& in, int degree, double n);
 
+    // Approximation of sinc function
+    Ctxt double_sinc(const Ctxt& in, int degree, double n);
+
+    // Cleaning à-la discrete CKKS
+    Ctxt clean_binary(const Ctxt& in, double scale);
+    Ctxt clean_sign(const Ctxt& in);
+    Ctxt clean_sigmoid(const Ctxt& in, double n);
+    Ctxt clean_sigmoid_and_scale(const Ctxt& in, double n);
 
     /**
       * Network-based operations

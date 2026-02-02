@@ -25,3 +25,4 @@ build-debug/
 .ipynb_checkpoints/
 /.idea
 /cmake-build-debug
+README.pdf

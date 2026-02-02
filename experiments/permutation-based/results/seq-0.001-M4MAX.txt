@@ -1,0 +1,58 @@
+========================================
+        SEQUENTIAL WITH d=0.001         
+========================================
+
+----------------------------------------
+ Run with inputs: 8
+----------------------------------------
+log(QP): 1390, λ >= 128 bits
+⌛(The sorting took:): 12:19s
+
+Final level: 25/26
+Corrects (up to 0.001): 8/8
+Precision bits: 20.385
+          2138507160  peak memory footprint, inputs: 8
+
+----------------------------------------
+ Run with inputs: 16
+----------------------------------------
+log(QP): 1488, λ >= 128 bits
+⌛(The sorting took:): 13:571s
+
+Final level: 26/27
+Corrects (up to 0.001): 16/16
+Precision bits: 17.402
+          2450786416  peak memory footprint, inputs: 16
+
+----------------------------------------
+ Run with inputs: 32
+----------------------------------------
+log(QP): 1662, λ >= 128 bits
+⌛(The sorting took:): 16:680s
+
+Final level: 29/30
+Corrects (up to 0.001): 32/32
+Precision bits: 21.408
+          2993900064  peak memory footprint, inputs: 32
+
+----------------------------------------
+ Run with inputs: 64
+----------------------------------------
+log(QP): 1700, λ >= 128 bits
+⌛(The sorting took:): 18:519s
+
+Final level: 30/31
+Corrects (up to 0.001): 64/64
+Precision bits: 20.413
+          3352759032  peak memory footprint, inputs: 64
+
+----------------------------------------
+ Run with inputs: 128
+----------------------------------------
+log(QP): 1656, λ >= 128 bits
+⌛(The sorting took:): 22:694s
+
+Final level: 32/33
+Corrects (up to 0.001): 128/128
+Precision bits: 19.340
+          4101672416  peak memory footprint, inputs: 128

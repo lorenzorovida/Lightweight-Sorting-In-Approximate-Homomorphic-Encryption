@@ -3,6 +3,14 @@ project(Practical-Sorting-of-Encrypted-Numbers)
 set(CMAKE_CXX_STANDARD 17)
 option( BUILD_STATIC "Set to ON to include static versions of the library" OFF)
 
+list(APPEND CMAKE_PREFIX_PATH "/Users/narger/Desktop/OpenFHE-Fork/openfhe-development-chebyshevSIMD/build")
+
+set(OpenFHE_DIR "/Users/narger/Desktop/OpenFHE-Fork/openfhe-development-chebyshevSIMD/build")
+set(CMAKE_PREFIX_PATH "/Users/narger/Desktop/OpenFHE-Fork/openfhe-development-chebyshevSIMD/build" ${CMAKE_PREFIX_PATH})
+
+set(CMAKE_BUILD_RPATH "${CMAKE_SOURCE_DIR}/Users/narger/Desktop/OpenFHE-Fork/openfhe-development-chebyshevSIMD/build")
+set(CMAKE_INSTALL_RPATH "${CMAKE_SOURCE_DIR}/Users/narger/Desktop/OpenFHE-Fork/openfhe-development-chebyshevSIMD/build")
+
 find_package(OpenFHE CONFIG REQUIRED)
 if (OpenFHE_FOUND)
     message(STATUS "FOUND PACKAGE OpenFHE")
@@ -36,3 +44,13 @@ else()
 endif()
 
 add_executable(Sort src/main.cpp src/FHEController.cpp src/FHEController.h src/Utils.h src/PermutationSorting.cpp src/PermutationSorting.h src/NetworkSorting.cpp src/NetworkSorting.h)
+
+target_link_directories(Sort PRIVATE
+        /Users/narger/Desktop/OpenFHE-Fork/openfhe-development-chebyshevSIMD/build
+        )
+
+target_link_libraries(Sort PRIVATE
+        OPENFHEpke
+        OPENFHEcore
+        OPENFHEbinfhe
+        )
