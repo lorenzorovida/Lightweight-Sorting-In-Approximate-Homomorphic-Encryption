@@ -11,8 +11,6 @@ Ctxt PermutationSorting::sort(const Ctxt& in_exp, const Ctxt& in_rep) {
     Ctxt cmp = controller.sigmoid(difference, 1, degree_sigmoid, -sigmoid_scaling);
 
     if (tieoffset) {
-        if (verbose) std::cout << std::endl << "Available threads: " << omp_get_max_threads() << ", required 2 for full speed"
-                                                                                 << std::endl << std::endl;
         Ctxt offset;
 
 #pragma omp parallel sections
@@ -33,8 +31,6 @@ Ctxt PermutationSorting::sort(const Ctxt& in_exp, const Ctxt& in_rep) {
         indexing = compute_indexing(cmp);
     }
 
-
-    if (verbose) controller.print(indexing, n*n, "Indexes: ");
 
     // Indexes are correct, simply scaled by 1/n for approximations to run over [-1, 1]
 

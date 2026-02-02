@@ -26,3 +26,4 @@ build-debug/
 /.idea
 /cmake-build-debug
 README.pdf
+/cmake-build-release
