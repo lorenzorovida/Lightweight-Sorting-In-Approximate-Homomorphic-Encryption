@@ -58,12 +58,12 @@ One of the following three arguments are required in order to correctly give the
 
 - **Input file**: To use as input a file, use `--file FILENAME` where `FILENAME` is the selected file. Notice that the file must contain a power-of-two number of values. For example:
 ```
- --file "../inputs/sample.txt"
+ --file "../inputs/sample.txt" --delta 0.01
 ```
 
 - **Input inline**: Alternatively, you can provide a vector directly by enclosing it in square brackets, for example: `"[0.5, 0.12, 0.71, 0.42]"`. Notice that, also in this case, the length of the vector $|v|$ must be a power of two. 
 ```
-"[0.5, 0.12, 0.71, 0.42]"
+--inline "[0.5, 0.12, 0.71, 0.42]" --delta 0.01
 ```
 
 #### Sorting method
@@ -95,7 +95,7 @@ It is possible to change the behavior of the program by using some optional argu
 > [!IMPORTANT]
 > If the input contains repeated elements and this flag is not on, sorting will not work properly.
 
-- `--toy`: with this argument the cryptosystem will not have the minimum requirement of $\lambda \geq 128$ security bits against classical computers. Suggested in case you want to play around with the algorithm. For example:
+- `--toy`: with this argument the cryptosystem will not have the minimum requirement of $\lambda \geq 128$ security bits against classical computers, but will be much faster and lighter. Suggested in case you want to play around with the algorithm. For example:
 ```
 ./Sort --random 32 --delta 0.01 --permutation --toy
 ```
