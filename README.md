@@ -115,15 +115,7 @@ You can find a presentation of this work clicking here:
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/ea066flbddU/0.jpg)](https://www.youtube.com/watch?v=ea066flbddU)
 
-## Authors
 
-- Lorenzo Rovida (`lorenzo.rovida@unimib.it`)
-- Alberto Leporati (`alberto.leporati@unimib.it`)
-- Simone Basile (`s.basile@campus.unimib.it`)
-
-Made with <3  at [Bicocca Security Lab](https://www.bislab.unimib.it), at University of Milan-Bicocca.
-
-<img src="imgs/lab_logo.png" alt="BisLab logo" width=20%>
 
 
 ### Declaration
