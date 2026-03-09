@@ -4,7 +4,9 @@
 [![CMake on multiple platforms](https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption/actions/workflows/cmake-single-platform.yml/badge.svg)](https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption/actions/workflows/cmake-single-platform.yml)
 <br>
 <a href="https://eprint.iacr.org/2025/1150"><img src="imgs/preprint_icon.svg" alt="Console presentation image" ></a>
-<img src="imgs/console.png" alt="Console presentation image" width=87% >
+<br>
+
+<img src="imgs/console.png" alt="Console presentation image" width=80% >
 
 ---
 This repository contains the source code for the preprint paper *[Lightweight Sorting in Approximate Homomorphic Encryption](https://ia.cr/2025/1150)*. With this code it is possible to sort a vector of encrypted values in "reasonable" time (e.g., few seconds for 128 elements in $[0, 1]$, with precision up to $10^{-2}$).
