@@ -51,12 +51,12 @@ class PermutationSorting {
               verbose(verbose),
               clean_permutation_matrix(clean_permutation_matrix) {}
 
-        Ctxt sort(const Ctxt& in_exp, const Ctxt& in_rep);
+        pair<Ctxt, Ctxt> sort(const Ctxt& in_exp, const Ctxt& in_rep);
 
     private:
         Ctxt compute_indexing(const Ctxt &c);
         Ctxt compute_tieoffset(const Ctxt &c);
-        Ctxt compute_sorting(const Ctxt &indexes, const Ctxt &in_rep);
+        pair<Ctxt, Ctxt> compute_sorting(const Ctxt &indexes, const Ctxt &in_rep);
         void set_degrees(double d);
 };
 

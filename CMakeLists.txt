@@ -43,7 +43,7 @@ else()
     link_libraries( ${OpenFHE_SHARED_LIBRARIES} )
 endif()
 
-add_executable(Sort src/main.cpp src/FHEController.cpp src/FHEController.h src/Utils.h src/PermutationSorting.cpp src/PermutationSorting.h src/NetworkSorting.cpp src/NetworkSorting.h)
+add_executable(Sort src/main.cpp src/FHEController.cpp src/FHEController.h src/Utils.h src/PermutationSorting.cpp src/PermutationSorting.h)
 
 target_link_directories(Sort PRIVATE
         /Users/narger/Desktop/OpenFHE-Fork/openfhe-development-chebyshevSIMD/build

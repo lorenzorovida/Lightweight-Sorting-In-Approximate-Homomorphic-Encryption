@@ -4,7 +4,6 @@
 #include "../src/FHEController.h"
 #include "Utils.h"
 #include "PermutationSorting.h"
-#include "NetworkSorting.h"
 
 #include "schemelet/rlwe-mp.h"
 #include "math/hermite.h"
@@ -17,7 +16,6 @@ using namespace std::chrono;
 
 void read_arguments(int argc, char *argv[]);
 void set_permutation_parameters(int n, double d);
-void set_network_parameters(int n, double d);
 void evaluate_sorting_accuracy(const Ctxt& result);
 
 
@@ -39,12 +37,6 @@ int degree_sinc;
 int circuit_depth;
 bool tieoffset;
 
-/*
- * Network-based parameters
- */
-int relu_degree;
-double input_scale;
-
 
 /*
  * Experimental
@@ -52,82 +44,81 @@ double input_scale;
 bool clean_permutation_matrix;
 
 
-SortingType sortingType = NONE;
-
 int main(int argc, char *argv[]) {
-    read_arguments(argc, argv);
+    //read_arguments(argc, argv);
 
-    if (argc == 1 || (argc == 2 && string(argv[1]) == "--help"))
-        return 0;
+    //if (argc == 1 || (argc == 2 && string(argv[1]) == "--help"))
+    //    return 0;
 
-    if (sortingType == NONE) {
-        cerr << "You must pick a sorting method. Add either --permutation or --network" << endl;
-        return 1;
-    } else {
-        if (verbose) cout << "Selected sorting type: " << to_string(sortingType) << endl;
-    }
-
-    Ctxt result;
+    toy = true;
+    delta = 0.001;
+    n = 128;
+    tieoffset = true;
+    clean_permutation_matrix = true;
+    verbose = true;
 
     auto start_time = steady_clock::now();
 
-    if (sortingType == PERMUTATION) {
-        if (sigmoid_scaling == 0 || degree_sigmoid == 0 || degree_sinc == 0) {
-            set_permutation_parameters(n, delta);
-        }
-
-        if (verbose) cout << endl << "Ciphertext: " << endl << input_values << endl << endl << "δ: " << delta << ", ";
-
-        controller.generate_context_permutation(n * n, circuit_depth, toy, n, delta);
-
-        Ctxt c = controller.encrypt(input_values, 0, input_values.size());
-
-        Ptxt p = controller.decrypt(c);
-
-        for (int i = 0; i < log2(n); i++) {
-            controller.generate_rotation_key(pow(2, i) * n);
-            controller.generate_rotation_key(pow(2, i));
-        }
-
-        Ctxt in_exp = controller.encrypt_expanded(input_values, 0, n*n, n);
-        Ctxt in_rep = controller.encrypt_repeated(input_values, 0, n*n, n);
-
-        PermutationSorting sorting =
-                PermutationSorting(controller, sigmoid_scaling, degree_sigmoid, degree_sinc, tieoffset, n, delta, toy, verbose, clean_permutation_matrix);
-
-        result = sorting.sort(in_exp, in_rep);
-
-    } else if (sortingType == NETWORK) {
-        set_network_parameters(n, delta);
-
-        cout << setprecision(precision_digits) << fixed;
-
-        if (verbose) cout << endl << "Ciphertext: " << endl << input_values << endl << endl << "δ: " << delta << ", n: " << n << endl;
-
-        // Levels required by max(0, x) approximation
-        int levels_consumption = poly_evaluation_cost(relu_degree);
-
-        // One more level for the masking operation
-        levels_consumption += 1;
-
-        circuit_depth = controller.generate_context_network(n, levels_consumption, toy, delta);
-        controller.generate_rotation_keys_network(n);
-
-        for (std::size_t i = 0; i < input_values.size(); i++) {
-            input_values[i] *= input_scale;
-        }
-
-        Ctxt in = controller.encrypt(input_values, circuit_depth - levels_consumption - 3, n);
-
-        NetworkSorting sorting =
-                NetworkSorting(controller, n, relu_degree, verbose);
-
-        result = sorting.sort(in);
+    if (sigmoid_scaling == 0 || degree_sigmoid == 0 || degree_sinc == 0) {
+        set_permutation_parameters(n, delta);
     }
 
-    print_duration(start_time, "The sorting took:");
+    controller.generate_context_permutation(n * n, circuit_depth + 10, toy, n, delta);
+    for (int i = 0; i < log2(n); i++) {
+        controller.generate_rotation_key(pow(2, i) * n);
+        controller.generate_rotation_key(pow(2, i));
+    }
 
-    evaluate_sorting_accuracy(result);
+    /*
+     * Comincia
+     */
+    std::mt19937 rng(std::random_device{}());
+    std::uniform_real_distribution<double> dist(0.0, 1.0);
+
+    std::vector<double> recommendedValues;
+    std::vector<int> classes(0);
+    for (int i = 0; i < 128 * 2; i++) {
+        recommendedValues.push_back(dist(rng));
+        classes.push_back(i);
+    }
+
+    cout << endl << endl << "Given features vector: " recommendedValues << endl << endl;
+
+    vector<Ctxt> sortedClasses;
+
+    for (int i = 0; i < 128 * 2 / 128; i++) {
+        std::vector<double> slice(recommendedValues.begin() + (i * 128), recommendedValues.begin() + ((i + 1) * 128));
+
+        input_values = slice;
+
+        Ctxt in_exp = controller.encrypt_expanded(slice, 0, n * n, n);
+        Ctxt in_rep = controller.encrypt_repeated(slice, 0, n * n, n);
+
+        PermutationSorting sorting =
+                PermutationSorting(controller, sigmoid_scaling, degree_sigmoid, degree_sinc, tieoffset, n, delta, toy,
+                                   verbose, clean_permutation_matrix);
+
+        pair<Ctxt, Ctxt> result = sorting.sort(in_exp, in_rep);
+
+        //evaluate_sorting_accuracy(result.first);
+
+        std::vector<double> sliceClasses(classes.begin() + (i * 128), classes.begin() + ((i + 1) * 128));
+        Ctxt sliceClassesCtxt = controller.encrypt_repeated(sliceClasses, 0, n * n, n);
+
+        sliceClassesCtxt = controller.mult(sliceClassesCtxt, result.second);
+
+        for (int j = 0; j < log2(n); j++) {
+            int rotindex = pow(2, j);
+            sliceClassesCtxt = controller.add(sliceClassesCtxt, controller.rot(sliceClassesCtxt, rotindex));
+        }
+
+        controller.print_expanded(sliceClassesCtxt, 128*128, 128, "Classes (part " + to_string(i) + "): ");
+
+        print_duration(start_time, "The sorting took:");
+    }
+
+
+
 
 }
 
@@ -138,15 +129,8 @@ void evaluate_sorting_accuracy(const Ctxt& result) {
     vector<double> sorted_fhe = controller.decode(controller.decrypt(result));
 
     vector<double> results_fhe;
-
-    if (sortingType == PERMUTATION) {
-        for (int i = 0; i < n * n; i += n) {
-            results_fhe.push_back(sorted_fhe[i] / input_scale);
-        }
-    } else if (sortingType == NETWORK){
-        for (int i = 0; i < n; i += 1) {
-            results_fhe.push_back(sorted_fhe[i]);
-        }
+    for (int i = 0; i < n * n; i += n) {
+        results_fhe.push_back(sorted_fhe[i] / 1.0);
     }
 
     sort(input_values.begin(), input_values.end());
@@ -247,34 +231,10 @@ void set_permutation_parameters(int n, double d) {
         }
     }
 
-    input_scale = 1.0;
-
     circuit_depth = partial_depth + 1; //For the last matrix mult
 
     if (verbose) cout << "Circuit depth: " << circuit_depth << endl;
 
-}
-
-void set_network_parameters(int n, double d) {
-    if (d >= 0.1) {
-        precision_digits = 1;
-        relu_degree = 119;
-    } else if (d >= 0.01) {
-        precision_digits = 2;
-        relu_degree = 351;
-
-        if (n > 1024) {
-            relu_degree = 495;
-        }
-
-    } else if (d >= 0.001) {
-        precision_digits = 3;
-        relu_degree = 495;
-    } else {
-        cerr << "The required min distance '" << d << "' is too small!" << endl;
-    }
-
-    input_scale = 0.95;
 }
 
 void read_arguments(int argc, char *argv[]) {
@@ -376,12 +336,6 @@ void read_arguments(int argc, char *argv[]) {
     }
 
     for (int i = 1; i < argc; i++) {
-        if (string(argv[i]) == "--permutation") {
-            sortingType = PERMUTATION;
-        }
-        if (string(argv[i]) == "--network") {
-            sortingType = NETWORK;
-        }
         if (string(argv[i]) == "--toy") {
             toy = true;
         }
@@ -393,9 +347,6 @@ void read_arguments(int argc, char *argv[]) {
         }
         if (string(argv[i]) == "--delta") {
             delta = stod(argv[i+1]);
-        }
-        if (string(argv[i]) == "--relu") {
-            relu_degree = stoi(argv[i+1]);
         }
         if (string(argv[i]) == "--clean_permutation_matrix") {
             clean_permutation_matrix = true;

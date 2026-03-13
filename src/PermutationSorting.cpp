@@ -4,7 +4,7 @@
 
 #include "PermutationSorting.h"
 
-Ctxt PermutationSorting::sort(const Ctxt& in_exp, const Ctxt& in_rep) {
+pair<Ctxt, Ctxt> PermutationSorting::sort(const Ctxt& in_exp, const Ctxt& in_rep) {
     Ctxt indexing;
 
     Ctxt difference = controller.sub(in_exp, in_rep);
@@ -34,11 +34,10 @@ Ctxt PermutationSorting::sort(const Ctxt& in_exp, const Ctxt& in_rep) {
 
     // Indexes are correct, simply scaled by 1/n for approximations to run over [-1, 1]
 
-    Ctxt ordered = compute_sorting(indexing, in_rep);
-
-    return ordered;
+    return compute_sorting(indexing, in_rep);;
 
 }
+
 
 Ctxt PermutationSorting::compute_indexing(const Ctxt &c){
     //Devo dividere per n
@@ -51,8 +50,11 @@ Ctxt PermutationSorting::compute_indexing(const Ctxt &c){
         cmp = controller.clean_sigmoid_and_scale(cmp, 1.0 / n);
         cmp = controller.clean_sigmoid(cmp, n);
         cmp = controller.clean_sigmoid(cmp, n);
+        cmp = controller.clean_sigmoid(cmp, n);
+        cmp = controller.clean_sigmoid(cmp, n);
     } else if (delta == 0.0001) {
         cmp = controller.clean_sigmoid_and_scale(cmp, 1.0 / n);
+        cmp = controller.clean_sigmoid(cmp, n);
         cmp = controller.clean_sigmoid(cmp, n);
         cmp = controller.clean_sigmoid(cmp, n);
         cmp = controller.clean_sigmoid(cmp, n);
@@ -127,7 +129,7 @@ Ctxt PermutationSorting::compute_tieoffset(const Ctxt &c){
     return offset;
 }
 
-Ctxt PermutationSorting::compute_sorting(const Ctxt &indexes, const Ctxt &in_rep) {
+pair<Ctxt, Ctxt> PermutationSorting::compute_sorting(const Ctxt &indexes, const Ctxt &in_rep) {
     vector<double> zeros;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -137,15 +139,14 @@ Ctxt PermutationSorting::compute_sorting(const Ctxt &indexes, const Ctxt &in_rep
 
     Ctxt permutation_delta = controller.sub(indexes, controller.encode(zeros, 0, n*n));
 
-    Ctxt permutation_matrix;
-
-    permutation_matrix = controller.sinc(permutation_delta, degree_sinc, n);
-
+    Ctxt permutation_matrix = controller.sinc(permutation_delta, degree_sinc, n);
 
     if (n >= 32) {
         permutation_matrix = controller.clean_sigmoid(permutation_matrix, 1);
     }
     if (n >= 128) {
+        permutation_matrix = controller.clean_sigmoid(permutation_matrix, 1);
+        permutation_matrix = controller.clean_sigmoid(permutation_matrix, 1);
         permutation_matrix = controller.clean_sigmoid(permutation_matrix, 1);
     }
 
@@ -156,7 +157,7 @@ Ctxt PermutationSorting::compute_sorting(const Ctxt &indexes, const Ctxt &in_rep
         sorted = controller.add(sorted, controller.rot(sorted, rotindex));
     }
 
-    return sorted;
+    return make_pair(sorted, permutation_matrix);
 }
 
 

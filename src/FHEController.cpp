@@ -4,81 +4,14 @@
 
 #include "FHEController.h"
 
-int FHEController::generate_context_network(int num_slots, int levels_required, bool toy_parameters, double delta) {
-    CCParams<CryptoContextCKKSRNS> parameters;
-
-    parameters.SetSecretKeyDist(SPARSE_TERNARY);
-    vector<uint32_t> level_budget;
-
-    level_budget = {3, 3};
-
-    int dcrtBits = 51;
-    int firstMod = 54;
-
-    if (delta == 0.001) {
-        level_budget = {2, 3};
-        dcrtBits = 56;
-        firstMod = 57;
-    }
-
-    if (toy_parameters) {
-        parameters.SetSecurityLevel(lbcrypto::HEStd_NotSet);
-        parameters.SetRingDim(1 << 12);
-    } else {
-        parameters.SetSecurityLevel(lbcrypto::HEStd_128_classic);
-        parameters.SetRingDim(1 << 16);
-    }
-
-    cout << "Levels required: " << levels_required << endl;
-
-    parameters.SetNumLargeDigits(6);
-
-    if (delta == 0.001)
-        parameters.SetNumLargeDigits(7);
-
-    parameters.SetBatchSize(num_slots);
-
-    ScalingTechnique rescaleTech = FLEXIBLEAUTO;
-
-    parameters.SetScalingModSize(dcrtBits);
-    parameters.SetScalingTechnique(rescaleTech);
-    parameters.SetFirstModSize(firstMod);
-
-    int levelsUsedBeforeBootstrap = levels_required + 1;
-
-    int circuit_depth = levelsUsedBeforeBootstrap + FHECKKSRNS::GetBootstrapDepth(level_budget, SPARSE_TERNARY);
-
-    parameters.SetMultiplicativeDepth(circuit_depth);
-
-    context = GenCryptoContext(parameters);
-    context->Enable(PKE);
-    context->Enable(KEYSWITCH);
-    context->Enable(LEVELEDSHE);
-    context->Enable(ADVANCEDSHE);
-    context->Enable(FHE);
-
-    key_pair = context->KeyGen();
-
-    print_moduli_chain(key_pair.publicKey->GetPublicElements()[0]);
-    cout << endl;
-
-    context->EvalMultKeyGen(key_pair.secretKey);
-
-    context->EvalBootstrapSetup(level_budget, {0, 0}, num_slots);
-    context->EvalBootstrapKeyGen(key_pair.secretKey, num_slots);
-
-
-    return circuit_depth;
-}
-
 
 void FHEController::generate_context_permutation(int num_slots, int levels_required, bool toy, int n, double delta) {
     CCParams<CryptoContextCKKSRNS> parameters;
 
     parameters.SetSecretKeyDist(lbcrypto::SPARSE_ENCAPSULATED);
 
-    int dcrtBits = 38;
-    int firstMod = 43;
+    int dcrtBits = 45;
+    int firstMod = 55;
 
     if (toy) {
         parameters.SetSecurityLevel(lbcrypto::HEStd_NotSet);
@@ -87,6 +20,8 @@ void FHEController::generate_context_permutation(int num_slots, int levels_requi
         if (num_slots <= 1 << 13) parameters.SetRingDim(1 << 14);
         if (num_slots <= 1 << 12) parameters.SetRingDim(1 << 13);
         if (num_slots <= 1 << 11) parameters.SetRingDim(1 << 12);
+
+        cout << "N: " << num_slots * 2 << ", ";
 
     } else {
         parameters.SetSecurityLevel(lbcrypto::HEStd_128_classic);
@@ -116,13 +51,6 @@ void FHEController::generate_context_permutation(int num_slots, int levels_requi
         }
     }
 
-    if (delta == 0.0001) {
-        dcrtBits = 36;
-        firstMod = 40;
-        parameters.SetScalingModSize(dcrtBits);
-        parameters.SetFirstModSize(firstMod);
-        parameters.SetNumLargeDigits(9);
-    }
 
     parameters.SetMultiplicativeDepth(levels_required);
 
@@ -137,21 +65,8 @@ void FHEController::generate_context_permutation(int num_slots, int levels_requi
 
     print_moduli_chain(key_pair.publicKey->GetPublicElements()[0]);
 
-    cout << ", λ >= 128 bits" << endl;
-
     context->EvalMultKeyGen(key_pair.secretKey);
 
-}
-
-void FHEController::generate_rotation_keys_network(int num_slots) {
-    vector<int> rotations;
-
-    for (int i = 0; i < log2(num_slots); i++) {
-        rotations.push_back(pow(2, i));
-        rotations.push_back(-pow(2, i));
-    }
-
-    context->EvalRotateKeyGen(key_pair.secretKey, rotations);
 }
 
 void FHEController::generate_rotation_key(int index) {
@@ -408,12 +323,51 @@ void FHEController::print(const Ctxt &c, int slots, string prefix) {
     cout << endl;
 }
 
+void FHEController::print_expanded(const Ctxt &c, int slots, int distance, string prefix) {
+    if (slots == 0) {
+        slots = c->GetSlots();
+    }
+
+    cout << prefix;
+
+    Ptxt result;
+    context->Decrypt(key_pair.secretKey, c, &result);
+    result->SetSlots(slots);
+    vector<double> v = result->GetRealPackedValue();
+
+    cout << "[ ";
+
+    for (int i = 0; i < slots; i += distance) {
+        string segno = "";
+        if (v[i] > 0) {
+            segno = "";
+        } else {
+            segno = "-";
+            v[i] = -v[i];
+        }
+
+
+        if (i == slots - 1) {
+            cout << segno << v[i] << " ]";
+        } else {
+            if (abs(v[i]) <= 0.00001)
+                cout << "0.0000" << " ";
+            else
+                cout << segno << v[i] << " ";
+        }
+    }
+
+    cout << endl;
+}
+
 void FHEController::print_moduli_chain(const DCRTPoly& poly){
+    /*
     int num_primes = poly.GetNumOfElements();
     double total_bit_len = 0.0;
     for (int i = 0; i < num_primes; i++) {
         auto qi = poly.GetParams()->GetParams()[i]->GetModulus();
         total_bit_len += log(qi.ConvertToDouble()) / log(2);
     }
-    std::cout << "log(QP): " << ((int)total_bit_len);
+    */
+    //std::cout << "log(QP): " << ((int)total_bit_len);
 }
