@@ -113,7 +113,7 @@ As this work is still partially WIP, Feel free to open issues or to send us mess
 
 ## Presentation
 
-You can find a presentation of this work clicking here:
+You can find a presentation of an early version of this work by clicking here:
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/ea066flbddU/0.jpg)](https://www.youtube.com/watch?v=ea066flbddU)
 
