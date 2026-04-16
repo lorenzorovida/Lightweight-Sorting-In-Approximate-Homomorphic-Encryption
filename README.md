@@ -1,5 +1,5 @@
-# Lightweight Sorting in Approximate Homomorphic Encryption
-
+# Somewhat efficient blind recommender system for the MovieLens dataset
+>Custom branch of "Lightweight sorting in approximate homomorphic encryption" which is used as an implementation of this [extended abstract](lorenzorovida.github.io/>abstracts/2026_recommendersystem.pdf), presented at AICrypt '26.
 
 [![CMake on multiple platforms](https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption/actions/workflows/cmake-single-platform.yml/badge.svg)](https://github.com/lorenzorovida/Lightweight-Sorting-In-Approximate-Homomorphic-Encryption/actions/workflows/cmake-single-platform.yml)
 <br>
