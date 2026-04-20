@@ -197,6 +197,19 @@ static inline std::vector<double> generate_close_randoms(int n, double max_dista
     return {values.begin(), values.begin() + n};
 }
 
+static inline unsigned int nextPowerOfTwo(unsigned int n) {
+    if (n == 0) return 1;
+
+    n--;
+    n |= n >> 1;
+    n |= n >> 2;
+    n |= n >> 4;
+    n |= n >> 8;
+    n |= n >> 16;
+    return n + 1;
+}
+
+
 
 //Copy pasted from https://github.com/openfheorg/openfhe-development/blob/main/src/core/lib/math/chebyshev.cpp
 /*

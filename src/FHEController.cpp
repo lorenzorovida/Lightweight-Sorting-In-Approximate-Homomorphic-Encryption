@@ -200,7 +200,7 @@ Ctxt FHEController::rotsum(const Ctxt &in, int n) {
 
 Ctxt FHEController::sigmoid(const Ctxt &in, int n, int degree, int scaling) {
     return context->EvalChebyshevFunction([scaling, n](double x) -> double {
-        return 1/(n + n * exp(-scaling*x));
+        return 1/(n + n * exp(scaling*x));
 
     }, in, -1, 1, degree);
 }
@@ -350,10 +350,13 @@ void FHEController::print_expanded(const Ctxt &c, int slots, int distance, strin
         if (i == slots - 1) {
             cout << segno << v[i] << " ]";
         } else {
-            if (abs(v[i]) <= 0.00001)
+            if (abs(v[i]) <= 0.00001) {
                 cout << "0.0000" << " ";
-            else
+            }
+            else {
+                //cout << segno << (int) round(v[i]) << " ";
                 cout << segno << v[i] << " ";
+            }
         }
     }
 

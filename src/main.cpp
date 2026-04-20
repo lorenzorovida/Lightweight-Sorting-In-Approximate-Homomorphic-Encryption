@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
         set_permutation_parameters(n, delta);
     }
 
-    controller.generate_context_permutation(n * n, circuit_depth + 10, toy, n, delta);
+    controller.generate_context_permutation(n * n, 110, toy, n, delta);
     for (int i = 0; i < log2(n); i++) {
         controller.generate_rotation_key(pow(2, i) * n);
         controller.generate_rotation_key(pow(2, i));
@@ -77,17 +77,18 @@ int main(int argc, char *argv[]) {
 
     std::vector<double> recommendedValues;
     std::vector<int> classes(0);
-    for (int i = 0; i < 128 * 2; i++) {
+    for (int i = 0; i < n * 2; i++) {
         recommendedValues.push_back(dist(rng));
         classes.push_back(i);
     }
 
-    cout << endl << endl << "Given features vector: " recommendedValues << endl << endl;
+    cout << endl << endl << "Given features vector (size: " << recommendedValues.size() << "): " << recommendedValues << endl << endl;
 
     vector<Ctxt> sortedClasses;
+    vector<Ctxt> sortedIndexes;
 
-    for (int i = 0; i < 128 * 2 / 128; i++) {
-        std::vector<double> slice(recommendedValues.begin() + (i * 128), recommendedValues.begin() + ((i + 1) * 128));
+    for (int i = 0; i < n * 2 / n; i++) {
+        std::vector<double> slice(recommendedValues.begin() + (i * n), recommendedValues.begin() + ((i + 1) * n));
 
         input_values = slice;
 
@@ -102,20 +103,140 @@ int main(int argc, char *argv[]) {
 
         //evaluate_sorting_accuracy(result.first);
 
-        std::vector<double> sliceClasses(classes.begin() + (i * 128), classes.begin() + ((i + 1) * 128));
+        sortedClasses.push_back(result.first);
+
+        std::vector<double> sliceClasses(classes.begin() + (i * n), classes.begin() + ((i + 1) * n));
         Ctxt sliceClassesCtxt = controller.encrypt_repeated(sliceClasses, 0, n * n, n);
 
+        // Sorting vector as P * v
         sliceClassesCtxt = controller.mult(sliceClassesCtxt, result.second);
-
         for (int j = 0; j < log2(n); j++) {
             int rotindex = pow(2, j);
             sliceClassesCtxt = controller.add(sliceClassesCtxt, controller.rot(sliceClassesCtxt, rotindex));
         }
+        sortedIndexes.push_back(sliceClassesCtxt);
 
-        controller.print_expanded(sliceClassesCtxt, 128*128, 128, "Classes (part " + to_string(i) + "): ");
+        controller.print_expanded(result.first, n*n, n, "Sorted  (part " + to_string(i) + "): ");
+        controller.print_expanded(sliceClassesCtxt, n*n, n, "Classes (part " + to_string(i) + "): ");
 
+        // Expected classes
+        vector<int> idx(slice.size());
+        for (auto j = 0; j < slice.size(); j++) idx[j] = j;
+
+        sort(idx.begin(), idx.end(), [&](int a, int b) {
+            return slice[a] > slice[b]; // cambia in < per crescente
+        });
+
+        for (auto j = 0; j < idx.size(); j++) idx[j] += i*n;
+
+        cout << "Real classes:     " << idx << endl;
+
+        cout << "Level: " << sliceClassesCtxt->GetLevel() << endl;
         print_duration(start_time, "The sorting took:");
     }
+
+
+    //Values are expanded
+    int k = 2;
+    vector<double> maskK;
+    for (int i = 0; i < n; i++) {
+        if (i < k) maskK.push_back(1); else maskK.push_back(0);
+        for (int j = 0; j < n - 1; j++) maskK.push_back(0);
+    }
+
+    controller.generate_rotation_key(-(n * k));
+    controller.generate_rotation_key(-n+1);
+
+    /*
+     * Correcting
+     */
+    for (int i = 0; i < sortedClasses.size(); i++) {
+        sortedClasses[i] = controller.mult(sortedClasses[i], controller.encode(maskK, sortedClasses[0]->GetLevel(), n*n));
+        sortedIndexes[i] = controller.mult(sortedIndexes[i], controller.encode(maskK, sortedIndexes[0]->GetLevel(), n*n));
+
+        for (int j = 0; j < log2(n); j++) {
+            sortedClasses[i] = controller.add(sortedClasses[i], controller.rot(sortedClasses[i], pow(2, j)));
+            sortedIndexes[i] = controller.add(sortedIndexes[i], controller.rot(sortedIndexes[i], pow(2, j)));
+        }
+        sortedClasses[i] = controller.rot(sortedClasses[i], -n+1);
+        sortedIndexes[i] = controller.rot(sortedIndexes[i], -n+1);
+    }
+
+
+    // Final vector will contain the first k scores, the seocond k scores and so on
+    Ctxt finalVector = sortedClasses[sortedClasses.size() - 1]->Clone();
+    Ctxt finalIndexes = sortedIndexes[sortedIndexes.size() -1]->Clone();
+
+    finalVector = controller.rot(finalVector, -(n*k));
+    finalIndexes = controller.rot(finalIndexes, -(n*k));
+
+    for (int i = sortedClasses.size() - 2; i >= 0; i--) {
+        finalVector = controller.add(finalVector, sortedClasses[i]);
+        finalIndexes = controller.add(finalIndexes, sortedIndexes[i]);
+
+        if (i > 0) {
+            finalVector = controller.rot(finalVector, -(n*k));
+            finalIndexes = controller.rot(finalIndexes, -(n*k));
+        }
+    }
+
+    //int nextPowK = nextPowerOfTwo(k*sortedClasses.size());
+    PermutationSorting sorting =
+            PermutationSorting(controller, sigmoid_scaling, degree_sigmoid, degree_sinc, tieoffset, n, delta, toy,
+                               verbose, clean_permutation_matrix);
+
+    /*
+     * Todo: metterli in rep ed exp
+     */
+    // Input is expanded with zero-padding, let's repeat it
+    Ctxt finalVectorRep, finalIndexesRep;
+    vector<double> identity(n * n, 0.0);
+    for (int i = 0; i < n; i++)
+        identity[i * n + i] = 1.0;
+
+    finalVectorRep = controller.mult(finalVector, controller.encode(identity, finalVector->GetLevel(), n * n));
+    finalIndexesRep = controller.mult(finalIndexes, controller.encode(identity, finalIndexes->GetLevel(), n * n));
+
+    for (int i = 0; i < log2(n); i++) {
+        finalVectorRep = controller.add(finalVectorRep, controller.rot(finalVectorRep, n * pow(2, i)));
+        finalIndexesRep = controller.add(finalIndexesRep, controller.rot(finalIndexesRep, n * pow(2, i)));
+    }
+
+    vector<double> maskFirstN(n * n, 0.0);
+    for (int i = 0; i < n; i++) {
+        maskFirstN[i] = 1;
+    }
+
+    finalVectorRep = controller.mult(finalVectorRep, controller.encode(maskFirstN, finalVectorRep->GetLevel(), n*n));
+    finalIndexesRep = controller.mult(finalIndexesRep, controller.encode(maskFirstN, finalIndexesRep->GetLevel(), n*n));
+    for (int i = 0; i < log2(n); i++) {
+        finalVectorRep = controller.add(finalVectorRep, controller.rot(finalVectorRep, n * pow(2, i)));
+        finalIndexesRep = controller.add(finalIndexesRep, controller.rot(finalIndexesRep, n * pow(2, i)));
+    }
+
+    pair<Ctxt, Ctxt> result = sorting.sort(finalVector, finalVectorRep);
+
+
+    // Sorting vector as P * v
+    Ctxt sliceClassesCtxt = controller.mult(finalIndexesRep, result.second);
+    for (int j = 0; j < log2(n); j++) {
+        int rotindex = pow(2, j);
+        sliceClassesCtxt = controller.add(sliceClassesCtxt, controller.rot(sliceClassesCtxt, rotindex));
+    }
+    sortedIndexes.push_back(sliceClassesCtxt);
+
+    controller.print_expanded(sliceClassesCtxt, n*k, n, "Final classes:  ");
+
+    /* Expected final result */
+    vector<int> idx(recommendedValues.size());
+    for (auto j = 0; j < recommendedValues.size(); j++) idx[j] = j;
+
+    sort(idx.begin(), idx.end(), [&](int a, int b) {
+        return recommendedValues[a] > recommendedValues[b]; // cambia in < per crescente
+    });
+
+    cout << "Real classes:   " << idx << endl;
+    cout << "Final level: " << sliceClassesCtxt->GetLevel() << endl;
 
 
 
@@ -171,6 +292,12 @@ void set_permutation_parameters(int n, double d) {
         partial_depth = 11;
         partial_depth += 6; // Metto tre clean
 
+        precision_digits = 3;
+        sigmoid_scaling = 1000;
+        degree_sigmoid = 1007;
+        partial_depth = 11;
+        partial_depth += 10; // Metto cinque clean
+
     } else if (d == 0.0001) {
         precision_digits = 4;
         sigmoid_scaling = 3500;
@@ -191,6 +318,9 @@ void set_permutation_parameters(int n, double d) {
         degree_sinc = 59;
         partial_depth += 6;
 
+        degree_sinc = 495;
+        partial_depth += 3;
+
 
         if (delta == 0.0001) {
             degree_sinc = 247;
@@ -199,6 +329,9 @@ void set_permutation_parameters(int n, double d) {
     } else if (n == 16) {
         degree_sinc = 119;
         partial_depth += 7;
+
+        degree_sinc = 495;
+        partial_depth += 3;
 
         if (delta == 0.0001) {
             degree_sinc = 495;

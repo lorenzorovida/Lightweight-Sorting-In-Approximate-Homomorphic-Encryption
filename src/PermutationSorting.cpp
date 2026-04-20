@@ -52,6 +52,10 @@ Ctxt PermutationSorting::compute_indexing(const Ctxt &c){
         cmp = controller.clean_sigmoid(cmp, n);
         cmp = controller.clean_sigmoid(cmp, n);
         cmp = controller.clean_sigmoid(cmp, n);
+        cmp = controller.clean_sigmoid(cmp, n);
+        cmp = controller.clean_sigmoid(cmp, n);
+        cmp = controller.clean_sigmoid(cmp, n);
+
     } else if (delta == 0.0001) {
         cmp = controller.clean_sigmoid_and_scale(cmp, 1.0 / n);
         cmp = controller.clean_sigmoid(cmp, n);
@@ -79,6 +83,12 @@ Ctxt PermutationSorting::compute_tieoffset(const Ctxt &c){
     if (delta == 0.001) {
         eq = controller.clean_sigmoid(eq, 1);
         eq = controller.clean_sigmoid(eq, 1);
+        eq = controller.clean_sigmoid(eq, 1);
+        eq = controller.clean_sigmoid(eq, 1);
+        eq = controller.clean_sigmoid(eq, 1);
+        eq = controller.clean_sigmoid(eq, 1);
+        eq = controller.clean_sigmoid(eq, 1);
+
         //eq = controller.clean_sigmoid(eq, 1);
     } else if (delta == 0.0001) {
         eq = controller.clean_sigmoid(eq, 1);
@@ -140,11 +150,16 @@ pair<Ctxt, Ctxt> PermutationSorting::compute_sorting(const Ctxt &indexes, const 
     Ctxt permutation_delta = controller.sub(indexes, controller.encode(zeros, 0, n*n));
 
     Ctxt permutation_matrix = controller.sinc(permutation_delta, degree_sinc, n);
+    if (n >= 8) {
+        permutation_matrix = controller.clean_sigmoid(permutation_matrix, 1);
+    }
 
     if (n >= 32) {
         permutation_matrix = controller.clean_sigmoid(permutation_matrix, 1);
     }
     if (n >= 128) {
+        permutation_matrix = controller.clean_sigmoid(permutation_matrix, 1);
+        permutation_matrix = controller.clean_sigmoid(permutation_matrix, 1);
         permutation_matrix = controller.clean_sigmoid(permutation_matrix, 1);
         permutation_matrix = controller.clean_sigmoid(permutation_matrix, 1);
         permutation_matrix = controller.clean_sigmoid(permutation_matrix, 1);
